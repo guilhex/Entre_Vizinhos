@@ -22,6 +22,6 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         // Liga o BottomNav ao NavController
-        binding.nav_view.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController)
     }
 }

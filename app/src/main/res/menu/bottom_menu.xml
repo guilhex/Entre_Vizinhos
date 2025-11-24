@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/feedFragment"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_home"
         android:title="Início" />
 
     <item
         android:id="@+id/colecaoFragment"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_colecao"
         android:title="Coleção" />
 
     <item
