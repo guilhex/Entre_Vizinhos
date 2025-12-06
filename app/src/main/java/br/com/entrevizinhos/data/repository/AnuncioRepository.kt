@@ -18,6 +18,15 @@ class AnuncioRepository {
             val snapshot = collection.get().await()
 
             val lista = snapshot.toObjects(Anuncio::class.java) // pega o json e transforma para ler em variaveis os dados
+            Log.d("AnuncioRepo", "Sucesso! Encontrados: ${lista.size} anúncios")
+
+            // Debug extra: Se veio vazio, avisa
+            if (lista.isEmpty()) {
+                Log.d("AnuncioRepo", "Aviso: A coleção 'anuncios' foi encontrada mas está vazia.")
+            } else {
+                // Se achou algo, mostra o título do primeiro para confirmar que os dados vieram certos
+                Log.d("AnuncioRepo", "Primeiro item: ${lista[0].titulo}")
+            }
             return lista
         } catch (e: Exception) {
             Log.e("AnuncioRepo", "Erro ao buscar dados", e)
