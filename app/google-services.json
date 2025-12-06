@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "245033633510",
+    "project_id": "entre-vizinhos",
+    "storage_bucket": "entre-vizinhos.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245033633510:android:c6319765c02ea1fc259d27",
+        "android_client_info": {
+          "package_name": "br.com.entrevizinhos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpCEcAKhkf-VXhCTYNJxSjmDHPMHKS-h4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
