@@ -20,6 +20,15 @@
     <fragment
         android:id="@+id/perfilFragment"
         android:name="br.com.entrevizinhos.ui.PerfilFragment"
-        android:label="Perfil"
-        tools:layout="@layout/fragment_perfil" />
+        android:label="Perfil">
+        <action
+            android:id="@+id/action_perfil_to_criarAnuncio"
+            app:destination="@id/criarAnuncioFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/criarAnuncioFragment"
+        android:name="br.com.entrevizinhos.ui.CriarAnuncioFragment"
+        android:label="Criar Anúncio"
+        tools:layout="@layout/fragment_criar_anuncio" />
 </navigation>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_background">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/green_primary"
+        android:elevation="4dp"
+        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+        app:title="Novo Anúncio"
+        app:titleTextColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Título do Anúncio"
+                        android:layout_marginBottom="16dp"
+                        app:boxStrokeColor="@color/green_primary"
+                        app:hintTextColor="@color/green_primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etTituloAnuncio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapSentences"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:hint="Preço (R$)"
+                            app:boxStrokeColor="@color/green_primary"
+                            app:hintTextColor="@color/green_primary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etPrecoAnuncio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="numberDecimal"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:hint="Cidade"
+                            app:boxStrokeColor="@color/green_primary"
+                            app:hintTextColor="@color/green_primary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etCidadeAnuncio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Urutaí"
+                                android:inputType="textCapWords"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Descrição"
+                        app:boxStrokeColor="@color/green_primary"
+                        app:hintTextColor="@color/green_primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDescricaoAnuncio"
+                            android:layout_width="match_parent"
+                            android:layout_height="120dp"
+                            android:gravity="top|start"
+                            android:inputType="textMultiLine"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btnPublicarAnuncio"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="32dp"
+                android:text="Publicar Agora"
+                android:textSize="16sp"
+                android:backgroundTint="@color/green_primary"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,4 +35,18 @@ class AnuncioRepository {
             e.printStackTrace()
             false // Se deu errado
         }
+    fun salvarAnuncio(anuncio: Anuncio, callback: (Boolean) -> Unit) {
+        // Gera um ID novo automaticamente
+        val novoDocumento = db.collection("anuncios").document()
+        val anuncioComId = anuncio.copy(id = novoDocumento.id)
+
+        novoDocumento.set(anuncioComId)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener { e ->
+                Log.e("Firebase", "Erro ao salvar anuncio", e)
+                callback(false)
+            }
+    }
 }
