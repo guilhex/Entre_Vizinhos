@@ -17,7 +17,7 @@ class AnuncioRepository {
         return try {
             val snapshot = collection.get().await()
 
-            val lista = snapshot.toObjects(Anuncio::class.java)
+            val lista = snapshot.toObjects(Anuncio::class.java) // pega o json e transforma para ler em variaveis os dados
             return lista
         } catch (e: Exception) {
             Log.e("AnuncioRepo", "Erro ao buscar dados", e)
@@ -35,4 +35,34 @@ class AnuncioRepository {
             e.printStackTrace()
             false // Se deu errado
         }
+
+    suspend fun deletarAnuncio(id: String): Boolean {
+        try {
+            collection.document(id).delete().await()
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+    }
+
+    suspend fun atualizarAnuncio(anuncio: Anuncio): Boolean {
+        try {
+            collection.document(anuncio.id).set(anuncio).await()
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+    }
+
+    suspend fun buscarAnuncioPorId(id: String): Anuncio? {
+        try {
+            val snapshot = collection.document(id).get().await()
+            return snapshot.toObject(Anuncio::class.java)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
 }
