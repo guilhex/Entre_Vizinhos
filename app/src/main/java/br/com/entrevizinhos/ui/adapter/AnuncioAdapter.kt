@@ -8,26 +8,33 @@ import br.com.entrevizinhos.model.Anuncio
 
 // Adaptador padrão conforme Aula 08
 class AnuncioAdapter(
-    private val listaAnuncios: List<Anuncio>,
-    private val onAnuncioClick: (Anuncio) -> Unit // Lambda para tratar o clique
+    private var listaAnuncios: List<Anuncio>,
+    private val onAnuncioClick: (Anuncio) -> Unit, // Lambda para tratar o clique
 ) : RecyclerView.Adapter<AnuncioAdapter.AnuncioViewHolder>() {
-
     // ViewHolder usando ViewBinding (Aula 13)
-    inner class AnuncioViewHolder(val binding: ItemAnuncioBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class AnuncioViewHolder(
+        val binding: ItemAnuncioBinding,
+    ) : RecyclerView.ViewHolder(binding.root)
 
     // Cria o visual do item (infla o layout)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnuncioViewHolder {
-        val binding = ItemAnuncioBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): AnuncioViewHolder {
+        val binding =
+            ItemAnuncioBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return AnuncioViewHolder(binding)
     }
 
     // Preenche os dados (bind)
-    override fun onBindViewHolder(holder: AnuncioViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: AnuncioViewHolder,
+        position: Int,
+    ) {
         val anuncio = listaAnuncios[position]
 
         // Usando o 'apply' para acessar as views diretamente (Aula 01 - Kotlin Features)
@@ -40,6 +47,11 @@ class AnuncioAdapter(
                 onAnuncioClick(anuncio)
             }
         }
+    }
+
+    fun atualizarLista(novaLista: List<Anuncio>) {
+        listaAnuncios = novaLista
+        notifyDataSetChanged()
     }
 
     // Retorna o tamanho da lista

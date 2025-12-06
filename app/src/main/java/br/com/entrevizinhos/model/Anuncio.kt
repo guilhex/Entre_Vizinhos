@@ -12,5 +12,5 @@ data class Anuncio(
     val cidade: String = "",
     val fotos: List<String> = emptyList(),
     val vendedorId: String = "",
-    val dataPublicacao: Date = Date()
+    val dataPublicacao: Date = Date(),
 ) : Serializable

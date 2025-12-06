@@ -3,9 +3,11 @@ package br.com.entrevizinhos.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope // Importante: Permite usar corrotinas no ViewModel
 import br.com.entrevizinhos.data.repository.AnuncioRepository
 import br.com.entrevizinhos.data.repository.AuthRepository
 import br.com.entrevizinhos.model.Anuncio
+import kotlinx.coroutines.launch // Importante: Para iniciar a corrotina
 import java.util.Date
 
 class CriarAnuncioViewModel : ViewModel() {
@@ -27,14 +29,18 @@ class CriarAnuncioViewModel : ViewModel() {
                 descricao = descricao,
                 vendedorId = usuarioAtual.uid,
                 dataPublicacao = Date()
-                // fotos = emptyList() (Implementar upload de fotos é um passo avançado para depois)
             )
 
-            repository.salvarAnuncio(novoAnuncio) { sucesso ->
+            // 1. Abrimos o escopo de corrotina
+            viewModelScope.launch {
+                // 2. Chamamos a função suspend (que espera e retorna true/false)
+                val sucesso = repository.salvarAnuncio(novoAnuncio)
+
+                // 3. Atualizamos o LiveData com o resultado
                 _resultadoPublicacao.value = sucesso
             }
+
         } else {
-            // Se não estiver logado, não pode publicar (teoricamente a UI já bloqueia, mas é bom garantir)
             _resultadoPublicacao.value = false
         }
     }
