@@ -18,7 +18,8 @@ import br.com.entrevizinhos.viewmodel.AnuncioViewModel
 class FeedFragment : Fragment() {
     private var _binding: FragmentFeedBinding? = null
 
-    private val anuncioViewModel: AnuncioViewModel by viewModels() // by serve para a criação da val esta de responsa do viewmodel, ele verifica se ja existe na memoria antes de criar
+    // by serve para a criação da val esta de responsa do viewmodel, ele verifica se ja existe na memoria antes de criar
+    private val anuncioViewModel: AnuncioViewModel by viewModels()
 
     private lateinit var adapter: AnuncioAdapter // lateintit permite ser vazio
     private val binding get() = _binding!!
@@ -60,9 +61,21 @@ class FeedFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        // observe fica de olho se teve alteração no banco, se sim chama para atualizar a lista
+        // Mostra a barra de progresso assim que começamos a observar
+        binding.pbLoading.visibility = View.VISIBLE
+
         anuncioViewModel.anuncios.observe(viewLifecycleOwner) { listaAnuncios ->
+            // 2. DADOS CHEGARAM:
+            // Esconde a barra de progresso
+            binding.pbLoading.visibility = View.GONE
+
+            // Atualiza o adaptador
             adapter.atualizarLista(listaAnuncios)
+
+            // Feedback extra se a lista estiver vazia (Opcional mas recomendado)
+            if (listaAnuncios.isEmpty()) {
+                Toast.makeText(requireContext(), "Nenhum anúncio encontrado.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

@@ -87,4 +87,6 @@ dependencies {
     // Fragment KTX (Para usar 'by viewModels()')
     implementation("androidx.fragment:fragment-ktx:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    // google login
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
 }

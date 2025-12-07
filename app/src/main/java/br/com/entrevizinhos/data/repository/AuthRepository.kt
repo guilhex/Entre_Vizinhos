@@ -2,23 +2,21 @@ package br.com.entrevizinhos.data.repository
 
 import android.util.Log
 import br.com.entrevizinhos.model.Usuario
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthRepository {
-
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
-    // Retorna o usuário logado (Auth) ou null
     fun getCurrentUser() = auth.currentUser
 
-    // Deslogar
     fun signOut() {
         auth.signOut()
     }
 
-    // Busca dados detalhados no Firestore (Nome, Telefone, Foto)
+    // Busca dados do usuário
     fun carregarDadosUsuario(callback: (Usuario?) -> Unit) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
@@ -26,33 +24,94 @@ class AuthRepository {
             return
         }
 
-        db.collection("usuarios").document(userId)
+        db
+            .collection("usuarios")
+            .document(userId)
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
                     callback(usuario)
                 } else {
-                    // Se não tiver dados no banco ainda, retorna vazio mas com o email do Auth
-                    callback(Usuario(id = userId, email = auth.currentUser?.email ?: ""))
+                    // Usuário sem dados no banco, retorna dados do Google
+                    val email = auth.currentUser?.email ?: ""
+                    val nome = auth.currentUser?.displayName ?: "Vizinho"
+                    val foto = auth.currentUser?.photoUrl?.toString() ?: ""
+                    callback(Usuario(id = userId, email = email, nome = nome, fotoUrl = foto))
                 }
-            }
-            .addOnFailureListener { e ->
-                Log.e("AuthRepo", "Erro ao buscar perfil", e)
-                callback(null)
+            }.addOnFailureListener {
+                // Se der erro (ex: sem internet), libera o acesso com dados básicos
+                val email = auth.currentUser?.email ?: ""
+                callback(Usuario(id = userId, email = email))
             }
     }
 
-    // Salvar/Atualizar dados do perfil
-    fun salvarPerfil(usuario: Usuario, callback: (Boolean) -> Unit) {
+    fun salvarPerfil(
+        usuario: Usuario,
+        callback: (Boolean) -> Unit,
+    ) {
         val userId = auth.currentUser?.uid ?: return
-
-        // Garante que o ID está certo
-        val dadosParaSalvar = usuario.copy(id = userId)
-
-        db.collection("usuarios").document(userId)
-            .set(dadosParaSalvar)
+        db
+            .collection("usuarios")
+            .document(userId)
+            .set(usuario)
             .addOnSuccessListener { callback(true) }
             .addOnFailureListener { callback(false) }
+    }
+
+    // --- CORREÇÃO DO LOGIN TRAVADO ---
+    fun loginComGoogle(
+        credential: AuthCredential,
+        callback: (Boolean) -> Unit,
+    ) {
+        Log.d("AuthRepo", "Iniciando login com credencial...")
+        auth
+            .signInWithCredential(credential)
+            .addOnSuccessListener { result ->
+                val user = result.user
+                if (user != null) {
+                    val userId = user.uid
+                    Log.d("AuthRepo", "Login Auth OK! ID: $userId")
+
+                    // Tenta salvar no banco
+                    val userDoc = db.collection("usuarios").document(userId)
+
+                    userDoc
+                        .get()
+                        .addOnSuccessListener { document ->
+                            if (!document.exists()) {
+                                // Cria usuário novo
+                                val novoUsuario =
+                                    Usuario(
+                                        id = userId,
+                                        nome = user.displayName ?: "Novo Vizinho",
+                                        email = user.email ?: "",
+                                        fotoUrl = user.photoUrl.toString(),
+                                    )
+                                userDoc
+                                    .set(novoUsuario)
+                                    .addOnSuccessListener {
+                                        Log.d("AuthRepo", "Salvo no Firestore com sucesso")
+                                        callback(true) // SUCESSO COMPLETO
+                                    }.addOnFailureListener { e ->
+                                        Log.e("AuthRepo", "Erro ao salvar no Firestore", e)
+                                        callback(true) // IMPORTANTE: Deixa entrar mesmo com erro no banco
+                                    }
+                            } else {
+                                Log.d("AuthRepo", "Usuário já existia no Firestore")
+                                callback(true) // SUCESSO (Já existia)
+                            }
+                        }.addOnFailureListener { e ->
+                            Log.e("AuthRepo", "Erro ao ler Firestore", e)
+                            callback(true) // IMPORTANTE: Deixa entrar mesmo com erro de leitura
+                        }
+                } else {
+                    Log.e("AuthRepo", "Usuário veio nulo do Google")
+                    callback(false)
+                }
+            }.addOnFailureListener { e ->
+                Log.e("AuthRepo", "Erro fatal na autenticação", e)
+                callback(false)
+            }
     }
 }
