@@ -4,5 +4,15 @@
     <string name="categoria_2">Móveis</string>
     <string name="categoria_3">Eletrônicos</string>
     <string name="categoria_4">Ferramentas</string>
-    <string name="categoria_5">Doações</string>
+    <string name="categoria_5">Outros</string>
+
+    <!-- Array que é usado no criar anuncio -->
+    <string-array name="categorias_anuncio">
+
+        <item>Selecione</item>
+        <item>@string/categoria_2</item>
+        <item>@string/categoria_3</item>
+        <item>@string/categoria_4</item>
+        <item>@string/categoria_5</item>
+    </string-array>
 </resources>

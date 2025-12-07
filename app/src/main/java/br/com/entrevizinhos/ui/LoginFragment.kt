@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import br.com.entrevizinhos.R // <--- ESSE IMPORT É OBRIGATÓRIO PARA O VERMELHO SUMIR
+import br.com.entrevizinhos.R
 import br.com.entrevizinhos.data.repository.AuthRepository
 import br.com.entrevizinhos.databinding.FragmentLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -38,13 +38,11 @@ class LoginFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Se já estiver logado, vai direto pro Feed
         if (authRepository.getCurrentUser() != null) {
             findNavController().navigate(R.id.action_login_to_feed)
             return
         }
 
-        // Configuração do Google
         val gso =
             GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -62,11 +60,9 @@ class LoginFragment : Fragment() {
                         val conta = task.getResult(ApiException::class.java)
                         val credencial = GoogleAuthProvider.getCredential(conta.idToken, null)
 
-                        // Chama o repositório e aguarda o sucesso
                         authRepository.loginComGoogle(credencial) { sucesso ->
                             if (sucesso) {
                                 Toast.makeText(context, "Bem-vindo!", Toast.LENGTH_SHORT).show()
-                                // Navega para o Feed
                                 findNavController().navigate(R.id.action_login_to_feed)
                             } else {
                                 Toast.makeText(context, "Falha no Login", Toast.LENGTH_SHORT).show()
@@ -80,6 +76,10 @@ class LoginFragment : Fragment() {
 
         binding.btnGoogleLogin.setOnClickListener {
             launcherGoogle.launch(googleSignInClient.signInIntent)
+        }
+
+        binding.btnGuestLogin.setOnClickListener {
+            findNavController().navigate(R.id.feedFragment)
         }
     }
 

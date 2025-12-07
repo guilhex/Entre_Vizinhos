@@ -1,24 +1,55 @@
 package br.com.entrevizinhos.data.repository
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import br.com.entrevizinhos.model.Anuncio
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 
 class AnuncioRepository {
-    // 1. A Instância do Banco
     private val db = FirebaseFirestore.getInstance()
-
-    // 2. A Referência da Coleção
     private val collection = db.collection("anuncios")
 
-    // 3. busca com suspend
+    suspend fun converterImagemParaBase64(context: Context, uri: Uri): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val bitmapOriginal = BitmapFactory.decodeStream(inputStream)
+
+                val bitmapReduzido = redimensionarBitmap(bitmapOriginal, 600)
+
+                val outputStream = ByteArrayOutputStream()
+                bitmapReduzido.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
+                val bytes = outputStream.toByteArray()
+
+                val base64 = Base64.encodeToString(bytes, Base64.DEFAULT)
+                Log.d("AnuncioRepo", "Imagem convertida. Tamanho Base64: ${base64.length} chars")
+                "data:image/jpeg;base64,$base64"
+            } catch (e: Exception) {
+                Log.e("AnuncioRepo", "Erro ao converter imagem", e)
+                null
+            }
+        }
+    }
+
+    private fun redimensionarBitmap(bitmap: Bitmap, larguraMaxima: Int): Bitmap {
+        val razao = bitmap.width.toFloat() / bitmap.height.toFloat()
+        val largura = larguraMaxima
+        val altura = (largura / razao).toInt()
+        return Bitmap.createScaledBitmap(bitmap, largura, altura, true)
+    }
+
     suspend fun buscarAnuncios(): List<Anuncio> {
         return try {
             val snapshot = collection.get().await()
-
-            val lista = snapshot.toObjects(Anuncio::class.java)
-            return lista
+            snapshot.toObjects(Anuncio::class.java)
         } catch (e: Exception) {
             Log.e("AnuncioRepo", "Erro ao buscar dados", e)
             emptyList()
@@ -30,56 +61,42 @@ class AnuncioRepository {
             if (anuncio.id.isNotBlank()) {
                 collection.document(anuncio.id).set(anuncio).await()
             } else {
-                collection
-                    .add(anuncio)
-                    .await() // O .add() envia o objeto e gera um ID automático no servidor, .set() quando vc quer definir o ID
+                collection.add(anuncio).await()
             }
-            true // Se deu certo
+            Log.d("AnuncioRepo", "Anúncio salvo com ${anuncio.fotos.size} foto(s)")
+            true
         } catch (e: Exception) {
-            // Se a internet cair ou o servidor rejeitar
             Log.e("AnuncioRepo", "Erro ao salvar anuncio.", e)
-            false // Se deu errado
+            false
         }
 
     suspend fun deletarAnuncio(id: String): Boolean {
-        try {
+        return try {
             collection.document(id).delete().await()
-            return true
+            true
         } catch (e: Exception) {
             Log.e("AnuncioRepo", "Erro ao deletar anuncio.", e)
-            return false
+            false
         }
     }
 
-//    suspend fun atualizarAnuncio(anuncio: Anuncio): Boolean {
-//        try {
-//            collection.document(anuncio.id).set(anuncio).await()
-//            return true
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//            return false
-//        }
-//    }
-
     suspend fun buscarAnuncioPorId(id: String): Anuncio? {
-        try {
+        return try {
             val snapshot = collection.document(id).get().await()
-            return snapshot.toObject(Anuncio::class.java)
+            snapshot.toObject(Anuncio::class.java)
         } catch (e: Exception) {
             Log.e("AnuncioRepo", "Erro ao buscar anuncio", e)
-            return null
+            null
         }
     }
 
     suspend fun buscarAnunciosPorVendedor(vendedorId: String): List<Anuncio> {
-        try {
+        return try {
             val snapshot = collection.whereEqualTo("vendedorId", vendedorId).get().await()
-
-            val lista = snapshot.toObjects(Anuncio::class.java)
-            return lista
+            snapshot.toObjects(Anuncio::class.java)
         } catch (e: Exception) {
             Log.e("AnuncioRepo", "Erro ao buscar anuncio do vendedor", e)
-            return emptyList()
+            emptyList()
         }
     }
 }

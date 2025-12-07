@@ -2,16 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
-    <!-- Cores do projeto Entre Vizinhos -->
     <color name="green_primary">#166534</color>
     <color name="green_light">#E6F4EA</color>
     <color name="green_stroke">#D1E7D4</color>
-
     <color name="gray_background">#F7FAF7</color>
     <color name="gray_text">#666666</color>
     <color name="gray_border">#E0E0E0</color>
-
     <color name="text_primary">#333333</color>
     <color name="text_secondary">#666666</color>
+    <color name="green_chip_background">#E6F4EA</color>
+    <color name="green_chip_text">#166534</color>
 </resources>

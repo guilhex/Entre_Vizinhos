@@ -2,41 +2,39 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_background">
+    android:background="@color/gray_background"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/green_primary"
-        android:elevation="4dp"
+        style="@style/AppToolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
-        app:title="Novo Anúncio"
-        app:titleTextColor="@color/black"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:title="Novo Anúncio" />
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="16dp">
 
             <androidx.cardview.widget.CardView
+                style="@style/AppCardView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                app:contentPadding="16dp">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -44,21 +42,16 @@
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Título do Anúncio"
-                        android:textColor="@color/green_primary"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp"/>
+                        android:text="Título do Anúncio"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/AppTextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Ex: TV 42 polegadas semi nova"
-                        android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="@color/green_primary"
-                        app:hintTextColor="@color/green_primary">
+                        android:hint="Ex: TV 42 polegadas semi nova">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etTituloAnuncio"
@@ -68,21 +61,16 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
+                        style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Descrição"
-                        android:textColor="@color/green_primary"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp"/>
+                        android:text="Descrição"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/AppTextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Detalhes do produto, tempo de uso..."
-                        android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="@color/green_primary"
-                        app:hintTextColor="@color/green_primary">
+                        android:hint="Detalhes do produto, tempo de uso...">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescricaoAnuncio"
@@ -93,21 +81,16 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
+                        style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Preço"
-                        android:textColor="@color/green_primary"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp"/>
+                        android:text="Preço"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/AppTextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Valor em R$"
-                        android:layout_marginBottom="16dp"
-                        app:boxStrokeColor="@color/green_primary"
-                        app:hintTextColor="@color/green_primary">
+                        android:hint="Valor em R$">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPrecoAnuncio"
@@ -117,12 +100,11 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
+                        style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Categoria"
-                        android:textColor="@color/green_primary"
-                        android:textStyle="bold"
-                        android:layout_marginTop="8dp"/>
+                        android:layout_marginTop="8dp"
+                        android:text="Categoria"/>
 
                     <Spinner
                         android:id="@+id/spinnerCategoria"
@@ -130,15 +112,13 @@
                         android:layout_height="50dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="16dp"
-                        android:background="@android:drawable/btn_dropdown"
                         android:spinnerMode="dialog"/>
 
                     <TextView
+                        style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Entrega e Retirada"
-                        android:textColor="@color/green_primary"
-                        android:textStyle="bold"/>
+                        android:text="Entrega e Retirada"/>
 
                     <RadioGroup
                         android:id="@+id/rgEntrega"
@@ -152,6 +132,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Retirada"
+                            android:buttonTint="@color/green_primary"
                             android:checked="true"/>
 
                         <RadioButton
@@ -159,33 +140,46 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Faço Entrega"
+                            android:buttonTint="@color/green_primary"
                             android:layout_marginStart="16dp"/>
                     </RadioGroup>
 
                     <TextView
+                        style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Formas de Pagamento"
-                        android:textColor="@color/green_primary"
-                        android:textStyle="bold"/>
+                        android:text="Formas de Pagamento"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginBottom="16dp">
-                        <CheckBox android:id="@+id/cbDinheiro" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Dinheiro"/>
-                        <CheckBox android:id="@+id/cbPix" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pix"/>
-                        <CheckBox android:id="@+id/cbCartao" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cartão Crédito/Débito"/>
+                        <CheckBox
+                            android:id="@+id/cbDinheiro"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/green_primary"
+                            android:text="Dinheiro"/>
+                        <CheckBox
+                            android:id="@+id/cbPix"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/green_primary"
+                            android:text="Pix"/>
+                        <CheckBox
+                            android:id="@+id/cbCartao"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="@color/green_primary"
+                            android:text="Cartão Crédito/Débito"/>
                     </LinearLayout>
 
                     <TextView
+                        style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Fotos (Até 3)"
-                        android:textStyle="bold"
-                        android:textColor="@color/green_primary"
-                        android:layout_marginBottom="8dp"/>
+                        android:text="Fotos (Até 3)"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -199,7 +193,7 @@
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
                             app:cardCornerRadius="8dp"
-                            app:cardBackgroundColor="#E0E0E0">
+                            app:cardBackgroundColor="@color/gray_background">
                             <ImageView
                                 android:id="@+id/ivFoto1"
                                 android:layout_width="match_parent"
@@ -217,7 +211,7 @@
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
                             app:cardCornerRadius="8dp"
-                            app:cardBackgroundColor="#E0E0E0">
+                            app:cardBackgroundColor="@color/gray_background">
                             <ImageView
                                 android:id="@+id/ivFoto2"
                                 android:layout_width="match_parent"
@@ -234,7 +228,7 @@
                             android:layout_height="100dp"
                             android:layout_weight="1"
                             app:cardCornerRadius="8dp"
-                            app:cardBackgroundColor="#E0E0E0">
+                            app:cardBackgroundColor="@color/gray_background">
                             <ImageView
                                 android:id="@+id/ivFoto3"
                                 android:layout_width="match_parent"
@@ -249,15 +243,12 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPublicarAnuncio"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
+                style="@style/AppButton.Primary"
                 android:layout_marginTop="24dp"
                 android:text="Publicar Agora"
-                android:textSize="16sp"
-                android:backgroundTint="@color/green_primary"
-                android:textColor="@color/white"/>
+                android:textSize="16sp"/>
 
         </LinearLayout>
     </ScrollView>
