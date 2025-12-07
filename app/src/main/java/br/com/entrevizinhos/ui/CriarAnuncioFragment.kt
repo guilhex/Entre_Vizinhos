@@ -108,7 +108,7 @@ class CriarAnuncioFragment : Fragment() {
                 binding.btnPublicarAnuncio.text = "Publicando..."
                 binding.btnPublicarAnuncio.isEnabled = false
 
-                // Envia para o ViewModel salvar
+                // --- MUDANÇA AQUI: Passando a uriFotoSelecionada ---
                 viewModel.publicarAnuncio(
                     titulo = titulo,
                     preco = preco,
@@ -116,6 +116,7 @@ class CriarAnuncioFragment : Fragment() {
                     categoria = categoria,
                     entrega = entrega,
                     formasPagamento = formasPagamento,
+                    fotoUri = uriFotoSelecionada // <-- Passando a foto escolhida
                 )
             } else {
                 Toast.makeText(context, "Preencha Título, Preço e Categoria", Toast.LENGTH_SHORT).show()
