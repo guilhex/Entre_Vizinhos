@@ -1,0 +1,21 @@
+[33m9357df9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Resolvendo conflitos de merge
+[33m9f0ddd3[m Desenvolvimento adicional das funcionalidades de Perfil e Login
+[33m1f1db40[m Desenvolvimento Aba Perfil e Login
+[33m0c3f317[m[33m ([m[1;31morigin/Artur[m[33m, [m[1;32mArtur[m[33m)[m Adiciona tela de detalhes do anúncio e navegação
+[33m32d804c[m Refatora tela de Feed e item de anúncio
+[33mec5ea00[m Refatorando `salvarAnuncio` para também atualizar
+[33meb9fa2f[m Refatorando pacotes e adicionando funcionalidades ao AnuncioRepository
+[33m67787a8[m Mudanças Perfil
+[33m331dc7e[m Sua mensagem de commit descritiva
+[33mac90b8e[m Refatora feed para usar ViewModel e observar dados do Firebase
+[33me3a0bd6[m Adiciona funções de deletar, atualizar e buscar anúncio por ID no repositório
+[33m2be618b[m Configura Firebase e adiciona repositório de anúncios
+[33m20d99a8[m Merge branch 'main' into Artur
+[33mb76c9ce[m Atualizando .gitignore para ignorar .idea
+[33m848ab01[m removendo arquivos de configuração da IDE
+[33m437a32d[m Merge pull request #1 from guilhex/Artur
+[33m9257bb5[m .
+[33m479be53[m .
+[33m48b21ef[m Adiciona documentação README
+[33mefc4025[m Estrutura inicial: Navegação MVVM, Fragmentos e RecyclerView
+[33m1840e89[m Initial commit

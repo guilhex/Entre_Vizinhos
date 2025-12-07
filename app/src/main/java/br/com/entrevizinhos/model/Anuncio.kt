@@ -1,5 +1,6 @@
 package br.com.entrevizinhos.model
 
+import com.google.firebase.firestore.DocumentId
 import java.io.Serializable
 import java.util.Date
 
