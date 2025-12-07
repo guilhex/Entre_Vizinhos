@@ -22,7 +22,7 @@ class AnuncioViewModel : ViewModel() {
     fun buscarAnuncios() {
         // serve para fazer uma tarefa em segundo plano (.wait do repository)
         viewModelScope.launch {
-            val lista = anuncioRepository.buscarAnuncios() // salvar em uma val diferente para caso der erro achar facil
+            val lista = anuncioRepository.getAnuncios() // salvar em uma val diferente para caso der erro achar facil
             _anuncios.value = lista
         }
     }

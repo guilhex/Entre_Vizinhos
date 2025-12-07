@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.entrevizinhos.data.repository.AnuncioRepository
 import br.com.entrevizinhos.data.repository.AuthRepository
+import br.com.entrevizinhos.data.repository.UsuarioRepository
 import br.com.entrevizinhos.model.Anuncio
 import br.com.entrevizinhos.model.Usuario
 import kotlinx.coroutines.launch
@@ -13,6 +14,10 @@ import kotlinx.coroutines.launch
 class PerfilViewModel : ViewModel() {
     private val repository = AuthRepository()
     private val anuncioRepository = AnuncioRepository()
+
+    private val usuarioRepository = UsuarioRepository()
+    private val _vendedor = MutableLiveData<Usuario?>() // Pode ser nulo se não encontrar
+    val vendedor: LiveData<Usuario?> = _vendedor
 
     // --- DADOS DO USUÁRIO ---
     private val _dadosUsuario = MutableLiveData<Usuario>()
@@ -67,6 +72,13 @@ class PerfilViewModel : ViewModel() {
         viewModelScope.launch {
             val lista = anuncioRepository.buscarAnunciosPorVendedor(usuarioAtual.uid)
             _meusAnuncios.value = lista
+        }
+    }
+
+    fun carregarVendedor(id: String) {
+        viewModelScope.launch {
+            val usuario = usuarioRepository.getUsuario(id)
+            _vendedor.value = usuario
         }
     }
 }

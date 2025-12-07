@@ -1,7 +1,5 @@
 package br.com.entrevizinhos.viewmodel
 
-import android.content.Context
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,6 +17,7 @@ class CriarAnuncioViewModel : ViewModel() {
     private val _resultadoPublicacao = MutableLiveData<Boolean>()
     val resultadoPublicacao: LiveData<Boolean> = _resultadoPublicacao
 
+    // Função atualizada para aceitar TODOS os campos do formulário
     fun publicarAnuncio(
         titulo: String,
         preco: Double,
@@ -26,41 +25,29 @@ class CriarAnuncioViewModel : ViewModel() {
         categoria: String,
         entrega: String,
         formasPagamento: String,
-        fotos: List<Uri> = emptyList(),
-        context: Context,
     ) {
         val usuarioAtual = authRepository.getCurrentUser()
 
         if (usuarioAtual != null) {
+            val novoAnuncio =
+                Anuncio(
+                    titulo = titulo,
+                    preco = preco,
+                    descricao = descricao,
+                    cidade = "Urutaí", // Cidade fixa conforme combinamos
+                    categoria = categoria,
+                    entrega = entrega,
+                    formasPagamento = formasPagamento,
+                    vendedorId = usuarioAtual.uid,
+                    dataPublicacao = Date(),
+                )
+
             viewModelScope.launch {
-                try {
-                    val fotosBase64 = fotos.mapNotNull { uri ->
-                        repository.converterImagemParaBase64(context, uri)
-                    }
-
-                    val novoAnuncio =
-                        Anuncio(
-                            titulo = titulo,
-                            preco = preco,
-                            descricao = descricao,
-                            cidade = "Urutaí",
-                            categoria = categoria,
-                            entrega = entrega,
-                            formasPagamento = formasPagamento,
-                            vendedorId = usuarioAtual.uid,
-                            dataPublicacao = Date(),
-                            fotos = fotosBase64,
-                        )
-
-                    val sucesso = repository.salvarAnuncio(novoAnuncio)
-                    _resultadoPublicacao.postValue(sucesso)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    _resultadoPublicacao.postValue(false)
-                }
+                val sucesso = repository.salvarAnuncio(novoAnuncio)
+                _resultadoPublicacao.value = sucesso
             }
         } else {
-            _resultadoPublicacao.postValue(false)
+            _resultadoPublicacao.value = false
         }
     }
 }
