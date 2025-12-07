@@ -3,12 +3,16 @@ package br.com.entrevizinhos.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import br.com.entrevizinhos.data.repository.AnuncioRepository
 import br.com.entrevizinhos.data.repository.AuthRepository
+import br.com.entrevizinhos.model.Anuncio
 import br.com.entrevizinhos.model.Usuario
+import kotlinx.coroutines.launch
 
 class PerfilViewModel : ViewModel() {
-
     private val repository = AuthRepository()
+    private val anuncioRepository = AnuncioRepository()
 
     // --- DADOS DO USUÁRIO ---
     private val _dadosUsuario = MutableLiveData<Usuario>()
@@ -40,5 +44,24 @@ class PerfilViewModel : ViewModel() {
     fun deslogar() {
         repository.signOut()
         _estadoLogout.value = true // Avisa a tela que saiu
+    }
+
+    // ANUNCIOS
+    private val _meusAnuncios = MutableLiveData<List<Anuncio>>()
+    val meusAnuncios: LiveData<List<Anuncio>> = _meusAnuncios
+
+    fun carregarMeusAnuncios() {
+        val usuarioAtual = repository.getCurrentUser()
+
+        if (usuarioAtual == null) {
+            // Usuário deslogado: não tem "meus anúncios"
+            _meusAnuncios.value = emptyList()
+            return
+        }
+
+        viewModelScope.launch {
+            val lista = anuncioRepository.buscarAnunciosPorVendedor(usuarioAtual.uid)
+            _meusAnuncios.value = lista
+        }
     }
 }

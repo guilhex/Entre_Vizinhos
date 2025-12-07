@@ -3,10 +3,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- Cores do projeto Entre Vizinhos -->
     <color name="green_primary">#166534</color>
-    <color name="green_dark">#388E3C</color>
-    <color name="green_light">#C8E6C9</color>
-    <color name="green_accent">#8BC34A</color>
-    <color name="gray_text">#757575</color>
-    <color name="gray_background">#F5F5F5</color>
+    <color name="green_light">#E6F4EA</color>
+    <color name="green_stroke">#D1E7D4</color>
+
+    <color name="gray_background">#F7FAF7</color>
+    <color name="gray_text">#666666</color>
+    <color name="gray_border">#E0E0E0</color>
+
+    <color name="text_primary">#333333</color>
+    <color name="text_secondary">#666666</color>
 </resources>

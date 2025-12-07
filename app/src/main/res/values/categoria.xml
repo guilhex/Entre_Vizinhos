@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="categoria_todos">Todos</string>
+    <string name="categoria_2">Móveis</string>
+    <string name="categoria_3">Eletrônicos</string>
+    <string name="categoria_4">Ferramentas</string>
+    <string name="categoria_5">Doações</string>
+</resources>
