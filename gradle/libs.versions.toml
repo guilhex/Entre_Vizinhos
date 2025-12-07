@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.1"
+agp = "8.13.1"
 kotlin = "2.0.0" # A versão 2.0.21 é experimental, 2.0.0 é a mais estável no momento.
 coreKtx = "1.13.1"
 junit = "4.13.2"
