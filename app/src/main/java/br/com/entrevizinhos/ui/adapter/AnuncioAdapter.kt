@@ -14,7 +14,6 @@ class AnuncioAdapter(
     private var listaAnuncios: List<Anuncio>,
     private val onAnuncioClick: (Anuncio) -> Unit, // Lambda para tratar o clique
 ) : RecyclerView.Adapter<AnuncioAdapter.AnuncioViewHolder>() {
-
     // ViewHolder usando ViewBinding (Aula 13)
     inner class AnuncioViewHolder(
         val binding: ItemAnuncioBinding,
@@ -45,7 +44,8 @@ class AnuncioAdapter(
         holder.binding.apply {
             tvTitulo.text = anuncio.titulo
             tvPreco.text = "R$ ${String.format("%.2f", anuncio.preco)}"
-            tvLocalizacao.text = anuncio.cidade.ifEmpty { "Urutaí" }
+            tvLocalizacao.text = anuncio.cidade.ifEmpty { "Não informado" }
+            tvCategoria.text = anuncio.categoria
 
             // --- LÓGICA DE IMAGEM ATUALIZADA ---
             if (anuncio.fotos.isNotEmpty()) {
@@ -72,7 +72,8 @@ class AnuncioAdapter(
                     }
                 } else {
                     // CASO 2: É um Link/URL (Se você ativar o Storage no futuro)
-                    Glide.with(root.context)
+                    Glide
+                        .with(root.context)
                         .load(fotoString)
                         .into(ivAnuncioFoto)
                 }
@@ -85,6 +86,17 @@ class AnuncioAdapter(
             // Configura o clique no item inteiro
             root.setOnClickListener {
                 onAnuncioClick(anuncio)
+            }
+
+            // clique no coração
+            ivFavorito.setOnClickListener {
+                // finalizar logica
+                // Por enquanto, pode apenas avisar ou mudar a cor
+                if (ivFavorito.colorFilter == null) {
+                    ivFavorito.setColorFilter(android.graphics.Color.RED)
+                } else {
+                    ivFavorito.setColorFilter(null)
+                }
             }
         }
     }

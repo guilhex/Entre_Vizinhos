@@ -23,23 +23,23 @@
             android:id="@+id/ivAnuncioFoto"
             android:layout_width="0dp"
             android:layout_height="140dp"
+            android:background="#F5F5F5"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background"
-            android:background="#F5F5F5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ivFavorito"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@android:drawable/btn_star_big_off"
-            app:tint="#757575"
+            android:src="@drawable/ic_heart"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/gray_text" />
 
         <TextView
             android:id="@+id/tvTitulo"
@@ -50,36 +50,53 @@
             android:layout_marginEnd="12dp"
             android:ellipsize="end"
             android:maxLines="2"
-            tools:text="Bicicleta Aro 29 Seminova"
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivAnuncioFoto" />
+            app:layout_constraintTop_toBottomOf="@id/ivAnuncioFoto"
+            tools:text="Bicicleta Aro 29 Seminova" />
 
         <TextView
             android:id="@+id/tvPreco"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            tools:text="R$ 850,00"
-            android:textColor="#2E7D32"
+            android:textColor="@color/green_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tvTitulo"
-            app:layout_constraintTop_toBottomOf="@id/tvTitulo" />
+            app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+            tools:text="R$ 850,00" />
 
         <TextView
             android:id="@+id/tvLocalizacao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            tools:text="Vila Mariana, SP"
-            android:textColor="#757575"
+            android:textColor="@color/gray_text"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@id/tvTitulo"
-            app:layout_constraintTop_toBottomOf="@id/tvPreco" />
+            app:layout_constraintTop_toBottomOf="@id/tvPreco"
+            tools:text="Vila Mariana, SP" />
+
+        <TextView
+            android:id="@+id/tvCategoria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_chip_categoria"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/green_chip_text"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tvTitulo"
+            app:layout_constraintTop_toBottomOf="@id/tvLocalizacao"
+            tools:text="Móveis" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

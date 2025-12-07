@@ -9,4 +9,6 @@
     <color name="green_accent">#8BC34A</color>
     <color name="gray_text">#757575</color>
     <color name="gray_background">#F5F5F5</color>
+    <color name="green_chip_background">#E6F4EA</color>
+    <color name="green_chip_text">#166534</color>
 </resources>
