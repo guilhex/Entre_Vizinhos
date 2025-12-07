@@ -21,21 +21,26 @@ import br.com.entrevizinhos.ui.adapter.AnuncioAdapter
 import androidx.navigation.fragment.findNavController
 
 class PerfilFragment : Fragment() {
-
     private var _binding: FragmentPerfilBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var viewModel: PerfilViewModel
 
+    private lateinit var meusAnunciosAdapter: AnuncioAdapter
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentPerfilBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(PerfilViewModel::class.java)
@@ -58,7 +63,11 @@ class PerfilFragment : Fragment() {
 
             // Carrega a foto (Se tiver URL)
             if (usuario.fotoUrl.isNotEmpty()) {
-                Glide.with(this).load(usuario.fotoUrl).circleCrop().into(binding.ivPerfilFoto)
+                Glide
+                    .with(this)
+                    .load(usuario.fotoUrl)
+                    .circleCrop()
+                    .into(binding.ivPerfilFoto)
             }
         }
 
@@ -95,8 +104,10 @@ class PerfilFragment : Fragment() {
 
     private fun mostrarDialogoEdicao(usuario: Usuario) {
         // 1. Prepara o Layout do Diálogo
-        val dialogView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.dialog_editar_perfil, null)
+        val dialogView =
+            LayoutInflater
+                .from(requireContext())
+                .inflate(R.layout.dialog_editar_perfil, null)
 
         val etNome = dialogView.findViewById<TextInputEditText>(R.id.etEditarNome)
         val etTelefone = dialogView.findViewById<TextInputEditText>(R.id.etEditarTelefone)
@@ -106,22 +117,24 @@ class PerfilFragment : Fragment() {
         etTelefone.setText(usuario.telefone)
 
         // 3. Constrói o Alerta
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .setPositiveButton("Salvar") { _, _ ->
-                val novoNome = etNome.text.toString()
-                val novoTelefone = etTelefone.text.toString()
+        val dialog =
+            AlertDialog
+                .Builder(requireContext())
+                .setView(dialogView)
+                .setPositiveButton("Salvar") { _, _ ->
+                    val novoNome = etNome.text.toString()
+                    val novoTelefone = etTelefone.text.toString()
 
-                val usuarioAtualizado = usuario.copy(
-                    nome = novoNome,
-                    telefone = novoTelefone
-                )
+                    val usuarioAtualizado =
+                        usuario.copy(
+                            nome = novoNome,
+                            telefone = novoTelefone,
+                        )
 
-                viewModel.salvarPerfil(usuarioAtualizado)
-                Toast.makeText(context, "Perfil Atualizado!", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("Cancelar", null)
-            .create()
+                    viewModel.salvarPerfil(usuarioAtualizado)
+                    Toast.makeText(context, "Perfil Atualizado!", Toast.LENGTH_SHORT).show()
+                }.setNegativeButton("Cancelar", null)
+                .create()
 
         dialog.show()
 
@@ -129,19 +142,30 @@ class PerfilFragment : Fragment() {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.green_primary, null))
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.gray_text, null))
     }
-    private fun setupMeusAnuncios() {
-        // Dados de teste para ver a lista funcionando (depois virá do Firebase)
-        val listaTeste = listOf(
-            Anuncio(id = "1", titulo = "Meu Produto Exemplo", preco = 100.0, cidade = "Urutaí"),
-            Anuncio(id = "2", titulo = "Outra venda minha", preco = 50.0, cidade = "Urutaí")
-        )
 
-        val adapter = AnuncioAdapter(listaTeste) { anuncio ->
-            Toast.makeText(context, "Editar anúncio: ${anuncio.titulo}", Toast.LENGTH_SHORT).show()
+    private fun setupMeusAnuncios() {
+        // Cria o adapter vazio
+        meusAnunciosAdapter =
+            AnuncioAdapter(emptyList()) { anuncio ->
+                Toast.makeText(context, "Editar anúncio: ${anuncio.titulo}", Toast.LENGTH_SHORT).show()
+                // TROCAR AQUI DEPOIS PARA EDITAR
+            }
+
+        //  Configura o RecyclerView
+        binding.rvMeusAnuncios.layoutManager = LinearLayoutManager(context)
+        binding.rvMeusAnuncios.adapter = meusAnunciosAdapter
+
+        // Observa o LiveData do ViewModel
+        viewModel.meusAnuncios.observe(viewLifecycleOwner) { lista ->
+            meusAnunciosAdapter.atualizarLista(lista)
+
+            if (lista.isEmpty()) {
+                Toast.makeText(context, "Você ainda não publicou nenhum anúncio.", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        binding.rvMeusAnuncios.layoutManager = LinearLayoutManager(context)
-        binding.rvMeusAnuncios.adapter = adapter
+        // Dispara a carga dos anúncios
+        viewModel.carregarMeusAnuncios()
     }
 
     override fun onDestroyView() {

@@ -37,7 +37,7 @@ class AnuncioRepository {
             true // Se deu certo
         } catch (e: Exception) {
             // Se a internet cair ou o servidor rejeitar
-            e.printStackTrace()
+            Log.e("AnuncioRepo", "Erro ao salvar anuncio.", e)
             false // Se deu errado
         }
 
@@ -46,7 +46,7 @@ class AnuncioRepository {
             collection.document(id).delete().await()
             return true
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("AnuncioRepo", "Erro ao deletar anuncio.", e)
             return false
         }
     }
@@ -66,8 +66,20 @@ class AnuncioRepository {
             val snapshot = collection.document(id).get().await()
             return snapshot.toObject(Anuncio::class.java)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("AnuncioRepo", "Erro ao buscar anuncio", e)
             return null
+        }
+    }
+
+    suspend fun buscarAnunciosPorVendedor(vendedorId: String): List<Anuncio> {
+        try {
+            val snapshot = collection.whereEqualTo("vendedorId", vendedorId).get().await()
+
+            val lista = snapshot.toObjects(Anuncio::class.java)
+            return lista
+        } catch (e: Exception) {
+            Log.e("AnuncioRepo", "Erro ao buscar anuncio do vendedor", e)
+            return emptyList()
         }
     }
 }
