@@ -7,10 +7,12 @@ data class Anuncio(
     val id: String = "",
     val titulo: String = "",
     val descricao: String = "",
-    val categoria: String = "",
     val preco: Double = 0.0,
     val cidade: String = "",
-    val fotos: List<String> = emptyList(),
     val vendedorId: String = "",
-    val dataPublicacao: Date = Date(),
+    val dataPublicacao: Date? = null,
+    val fotos: List<String> = emptyList(),
+    val categoria: String = "",
+    val entrega: String = "",
+    val formasPagamento: String = ""
 ) : Serializable

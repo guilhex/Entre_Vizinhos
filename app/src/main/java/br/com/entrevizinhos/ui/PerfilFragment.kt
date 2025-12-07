@@ -1,5 +1,6 @@
 package br.com.entrevizinhos.ui
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,17 +9,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.entrevizinhos.R
 import br.com.entrevizinhos.databinding.FragmentPerfilBinding
+import br.com.entrevizinhos.model.Anuncio
 import br.com.entrevizinhos.model.Usuario
+import br.com.entrevizinhos.ui.adapter.AnuncioAdapter
 import br.com.entrevizinhos.viewmodel.PerfilViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
-// ... outros imports
-import androidx.recyclerview.widget.LinearLayoutManager
-import br.com.entrevizinhos.model.Anuncio
-import br.com.entrevizinhos.ui.adapter.AnuncioAdapter
-import androidx.navigation.fragment.findNavController
 
 class PerfilFragment : Fragment() {
 
@@ -42,42 +42,76 @@ class PerfilFragment : Fragment() {
 
         setupObservadores()
         setupListeners()
-
         setupMeusAnuncios()
 
-        // Busca os dados iniciais
+        // Busca os dados ao abrir a tela (Se não tiver logado, retorna usuário vazio/visitante)
         viewModel.carregarDados()
     }
 
     private fun setupObservadores() {
+        // Observa os dados do usuário para decidir se mostra PERFIL ou TELA DE VISITANTE
         viewModel.dadosUsuario.observe(viewLifecycleOwner) { usuario ->
-            // Atualiza a tela com os dados do usuário
-            binding.tvNomeUsuario.text = if (usuario.nome.isNotEmpty()) usuario.nome else "Usuário"
-            binding.tvEmailUsuario.text = usuario.email
-            binding.tvTelefone.text = if (usuario.telefone.isNotEmpty()) usuario.telefone else "Toque em editar para adicionar"
 
-            // Carrega a foto (Se tiver URL)
-            if (usuario.fotoUrl.isNotEmpty()) {
-                Glide.with(this).load(usuario.fotoUrl).circleCrop().into(binding.ivPerfilFoto)
+            // Verifica se é um visitante (Nome vazio ou "Novo Usuário")
+            if (usuario.nome == "Novo Usuário" || usuario.nome.isEmpty()) {
+                // --- MODO VISITANTE ---
+                binding.tvNomeUsuario.text = "Visitante"
+                binding.tvEmailUsuario.text = "Faça login para ver seus dados"
+                binding.tvTelefone.text = "-"
+                binding.ivPerfilFoto.setImageResource(R.drawable.ic_perfil) // Foto padrão
+
+                // Transforma botão "Sair" em botão "Entrar"
+                binding.btnSair.text = "Entrar / Cadastrar"
+                binding.btnSair.setTextColor(resources.getColor(R.color.green_primary, null))
+                binding.btnSair.setOnClickListener {
+                    // Vai para a tela de Login
+                    findNavController().navigate(R.id.action_perfil_to_login)
+                }
+
+                // Esconde funções exclusivas de quem tá logado
+                binding.btnAnunciar.visibility = View.GONE
+                binding.btnEditarPerfil.visibility = View.GONE
+                binding.tvTituloMeusAnuncios.visibility = View.GONE
+                binding.rvMeusAnuncios.visibility = View.GONE
+
+            } else {
+                // --- MODO USUÁRIO LOGADO ---
+                binding.tvNomeUsuario.text = usuario.nome
+                binding.tvEmailUsuario.text = usuario.email
+                binding.tvTelefone.text = if (usuario.telefone.isNotEmpty()) usuario.telefone else "Toque em editar para adicionar"
+
+                // Carrega a foto do Google/Firebase
+                if (usuario.fotoUrl.isNotEmpty()) {
+                    Glide.with(this).load(usuario.fotoUrl).circleCrop().into(binding.ivPerfilFoto)
+                }
+
+                // Restaura o botão "Sair" (Vermelho)
+                binding.btnSair.text = "Sair da Conta"
+                binding.btnSair.setTextColor(Color.parseColor("#D32F2F"))
+                binding.btnSair.setOnClickListener {
+                    viewModel.deslogar()
+                }
+
+                // Mostra funções
+                binding.btnAnunciar.visibility = View.VISIBLE
+                binding.btnEditarPerfil.visibility = View.VISIBLE
+                binding.tvTituloMeusAnuncios.visibility = View.VISIBLE
+                binding.rvMeusAnuncios.visibility = View.VISIBLE
             }
         }
 
+        // Observa quando o logout acontece
         viewModel.estadoLogout.observe(viewLifecycleOwner) { saiu ->
             if (saiu) {
-                // Aqui você deve navegar para a tela de Login
-                Toast.makeText(context, "Saiu da conta", Toast.LENGTH_SHORT).show()
-                binding.tvNomeUsuario.text = "Visitante"
-                binding.tvEmailUsuario.text = "-"
-                binding.tvTelefone.text = "-"
+                Toast.makeText(context, "Você saiu da conta.", Toast.LENGTH_SHORT).show()
+                // Recarrega os dados para cair no "Modo Visitante" acima
+                viewModel.carregarDados()
             }
         }
     }
 
     private fun setupListeners() {
-        binding.btnSair.setOnClickListener {
-            viewModel.deslogar()
-        }
-
+        // Botão Editar
         binding.btnEditarPerfil.setOnClickListener {
             val usuarioAtual = viewModel.dadosUsuario.value
             if (usuarioAtual != null) {
@@ -86,26 +120,23 @@ class PerfilFragment : Fragment() {
                 Toast.makeText(context, "Aguardando dados...", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Botão Anunciar
         binding.btnAnunciar.setOnClickListener {
-            // Navega para a tela de criação
-            // Certifique-se de importar: androidx.navigation.fragment.findNavController
             findNavController().navigate(R.id.action_perfil_to_criarAnuncio)
         }
     }
 
     private fun mostrarDialogoEdicao(usuario: Usuario) {
-        // 1. Prepara o Layout do Diálogo
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_editar_perfil, null)
 
         val etNome = dialogView.findViewById<TextInputEditText>(R.id.etEditarNome)
         val etTelefone = dialogView.findViewById<TextInputEditText>(R.id.etEditarTelefone)
 
-        // 2. Preenche com os dados atuais
         etNome.setText(usuario.nome)
         etTelefone.setText(usuario.telefone)
 
-        // 3. Constrói o Alerta
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .setPositiveButton("Salvar") { _, _ ->
@@ -125,12 +156,13 @@ class PerfilFragment : Fragment() {
 
         dialog.show()
 
-        // (Opcional) Mudar a cor do botão do diálogo para Verde
+        // Estiliza os botões do Dialog
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.green_primary, null))
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.gray_text, null))
     }
+
     private fun setupMeusAnuncios() {
-        // Dados de teste para ver a lista funcionando (depois virá do Firebase)
+        // Dados de teste para visualização (será substituído pelo Firebase depois)
         val listaTeste = listOf(
             Anuncio(id = "1", titulo = "Meu Produto Exemplo", preco = 100.0, cidade = "Urutaí"),
             Anuncio(id = "2", titulo = "Outra venda minha", preco = 50.0, cidade = "Urutaí")

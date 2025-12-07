@@ -43,11 +43,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Título do Anúncio"
+                        android:textColor="@color/green_primary"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Título do Anúncio"
+                        android:hint="Ex: TV 42 polegadas semi nova"
                         android:layout_marginBottom="16dp"
                         app:boxStrokeColor="@color/green_primary"
                         app:hintTextColor="@color/green_primary">
@@ -59,63 +67,184 @@
                             android:inputType="textCapSentences"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="16dp">
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            android:hint="Preço (R$)"
-                            app:boxStrokeColor="@color/green_primary"
-                            app:hintTextColor="@color/green_primary">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etPrecoAnuncio"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:inputType="numberDecimal"/>
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            android:hint="Cidade"
-                            app:boxStrokeColor="@color/green_primary"
-                            app:hintTextColor="@color/green_primary">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etCidadeAnuncio"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Urutaí"
-                                android:inputType="textCapWords"/>
-                        </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
+                        android:text="Descrição"
+                        android:textColor="@color/green_primary"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Descrição"
+                        android:hint="Detalhes do produto, tempo de uso..."
+                        android:layout_marginBottom="16dp"
                         app:boxStrokeColor="@color/green_primary"
                         app:hintTextColor="@color/green_primary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescricaoAnuncio"
                             android:layout_width="match_parent"
-                            android:layout_height="120dp"
+                            android:layout_height="100dp"
                             android:gravity="top|start"
                             android:inputType="textMultiLine"/>
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Preço"
+                        android:textColor="@color/green_primary"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Valor em R$"
+                        android:layout_marginBottom="16dp"
+                        app:boxStrokeColor="@color/green_primary"
+                        app:hintTextColor="@color/green_primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPrecoAnuncio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categoria"
+                        android:textColor="@color/green_primary"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp"/>
+
+                    <Spinner
+                        android:id="@+id/spinnerCategoria"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@android:drawable/btn_dropdown"
+                        android:spinnerMode="dialog"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Entrega e Retirada"
+                        android:textColor="@color/green_primary"
+                        android:textStyle="bold"/>
+
+                    <RadioGroup
+                        android:id="@+id/rgEntrega"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <RadioButton
+                            android:id="@+id/rbRetirada"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Retirada"
+                            android:checked="true"/>
+
+                        <RadioButton
+                            android:id="@+id/rbEntrega"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Faço Entrega"
+                            android:layout_marginStart="16dp"/>
+                    </RadioGroup>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Formas de Pagamento"
+                        android:textColor="@color/green_primary"
+                        android:textStyle="bold"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="16dp">
+                        <CheckBox android:id="@+id/cbDinheiro" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Dinheiro"/>
+                        <CheckBox android:id="@+id/cbPix" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pix"/>
+                        <CheckBox android:id="@+id/cbCartao" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cartão Crédito/Débito"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fotos (Até 3)"
+                        android:textStyle="bold"
+                        android:textColor="@color/green_primary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardFoto1"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardBackgroundColor="#E0E0E0">
+                            <ImageView
+                                android:id="@+id/ivFoto1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@android:drawable/ic_menu_camera"
+                                android:padding="30dp"
+                                app:tint="@color/gray_text"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardFoto2"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            app:cardCornerRadius="8dp"
+                            app:cardBackgroundColor="#E0E0E0">
+                            <ImageView
+                                android:id="@+id/ivFoto2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@android:drawable/ic_menu_camera"
+                                android:padding="30dp"
+                                app:tint="@color/gray_text"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardFoto3"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            app:cardCornerRadius="8dp"
+                            app:cardBackgroundColor="#E0E0E0">
+                            <ImageView
+                                android:id="@+id/ivFoto3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@android:drawable/ic_menu_camera"
+                                android:padding="30dp"
+                                app:tint="@color/gray_text"/>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -124,7 +253,7 @@
                 android:id="@+id/btnPublicarAnuncio"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:text="Publicar Agora"
                 android:textSize="16sp"
                 android:backgroundTint="@color/green_primary"
