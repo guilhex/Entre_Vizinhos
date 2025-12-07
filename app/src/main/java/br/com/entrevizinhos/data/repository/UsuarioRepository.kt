@@ -7,7 +7,7 @@ import kotlinx.coroutines.tasks.await
 
 class UsuarioRepository {
     private val db = FirebaseFirestore.getInstance()
-    private val collection = db.collection("usuario")
+    private val collection = db.collection("usuarios")
 
     suspend fun getUsuario(userId: String): Usuario? {
         try {

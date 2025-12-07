@@ -43,7 +43,7 @@ class CriarAnuncioViewModel : ViewModel() {
                 )
 
             viewModelScope.launch {
-                val sucesso = repository.salvarAnuncio(novoAnuncio)
+                val sucesso = repository.setAnuncio(novoAnuncio)
                 _resultadoPublicacao.value = sucesso
             }
         } else {

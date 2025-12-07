@@ -6,11 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import br.com.entrevizinhos.R
 import br.com.entrevizinhos.databinding.FragmentDetalhesAnuncioBinding
 import br.com.entrevizinhos.model.Anuncio
+import br.com.entrevizinhos.model.Usuario
+import br.com.entrevizinhos.viewmodel.PerfilViewModel
 import com.bumptech.glide.Glide
 
 class DetalhesAnuncioFragment : Fragment() {
@@ -19,6 +22,10 @@ class DetalhesAnuncioFragment : Fragment() {
 
     // SafeArgs: Esta linha "apanha" o pacote (Anuncio) que foi enviado pelo Feed
     private val args: DetalhesAnuncioFragmentArgs by navArgs()
+
+    private val perfilViewModel: PerfilViewModel by viewModels()
+
+    private var vendedorAtual: Usuario? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +50,8 @@ class DetalhesAnuncioFragment : Fragment() {
 
         // 3. Configuramos os botões
         setupListeners()
+
+        setupObservers(anuncio)
     }
 
     private fun setupDados(anuncio: Anuncio) {
@@ -72,9 +81,27 @@ class DetalhesAnuncioFragment : Fragment() {
         }
 
         // Botão de Contacto
-        binding.btnContato.setOnClickListener {
-            Toast.makeText(context, "Chat será implementado na Fase 3!", Toast.LENGTH_SHORT).show()
+        binding.btnWhatsapp.setOnClickListener {
+            Toast.makeText(context, "Chat será implementado!", Toast.LENGTH_SHORT).show()
         }
+
+        // Botão de denuncia
+        binding.btnDenunciar.setOnClickListener {
+            Toast.makeText(context, "Chat será implementado!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupObservers(anuncio: Anuncio) {
+        perfilViewModel.vendedor.observe(viewLifecycleOwner) { usuarioVendedor ->
+            usuarioVendedor?.let { usuario ->
+                binding.tvNomeVendedor.text = usuario.nome
+                println(usuario.nome)
+                binding.tvLocalVendedor.text = usuario.endereco
+                vendedorAtual = usuario
+            }
+        }
+
+        perfilViewModel.carregarVendedor(anuncio.vendedorId)
     }
 
     override fun onDestroyView() {

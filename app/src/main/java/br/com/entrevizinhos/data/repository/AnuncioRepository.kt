@@ -13,7 +13,7 @@ class AnuncioRepository {
     private val collection = db.collection("anuncios")
 
     // 3. busca com suspend
-    suspend fun buscarAnuncios(): List<Anuncio> {
+    suspend fun getAnuncios(): List<Anuncio> {
         return try {
             val snapshot = collection.get().await()
 
@@ -25,7 +25,7 @@ class AnuncioRepository {
         }
     }
 
-    suspend fun salvarAnuncio(anuncio: Anuncio): Boolean =
+    suspend fun setAnuncio(anuncio: Anuncio): Boolean =
         try {
             if (anuncio.id.isNotBlank()) {
                 collection.document(anuncio.id).set(anuncio).await()

@@ -12,7 +12,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import br.com.entrevizinhos.R
 import br.com.entrevizinhos.databinding.FragmentCriarAnuncioBinding
 import br.com.entrevizinhos.viewmodel.CriarAnuncioViewModel
 
@@ -21,15 +20,34 @@ class CriarAnuncioFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: CriarAnuncioViewModel
-    private var uriFotoSelecionada: Uri? = null
 
-    // Lógica para pegar a foto da galeria
+    private var uriFoto1: Uri? = null
+    private var uriFoto2: Uri? = null
+    private var uriFoto3: Uri? = null
+    private var slotFotoSelecionado = 1
+
     private val selecionarFoto =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                uriFotoSelecionada = uri
-                binding.ivFoto1.setImageURI(uri)
-                binding.ivFoto1.setPadding(0, 0, 0, 0)
+                when (slotFotoSelecionado) {
+                    1 -> {
+                        uriFoto1 = uri
+                        binding.ivFoto1.setImageURI(uri)
+                        binding.ivFoto1.setPadding(0, 0, 0, 0)
+                    }
+
+                    2 -> {
+                        uriFoto2 = uri
+                        binding.ivFoto2.setImageURI(uri)
+                        binding.ivFoto2.setPadding(0, 0, 0, 0)
+                    }
+
+                    3 -> {
+                        uriFoto3 = uri
+                        binding.ivFoto3.setImageURI(uri)
+                        binding.ivFoto3.setPadding(0, 0, 0, 0)
+                    }
+                }
             }
         }
 
@@ -55,8 +73,7 @@ class CriarAnuncioFragment : Fragment() {
     }
 
     private fun setupSpinner() {
-        // Opções para o botão clicável de categoria (Spinner)
-        val categorias = resources.getStringArray(R.array.categorias_anuncio)
+        val categorias = listOf("Selecione", "Móveis", "Eletrônicos", "Serviços", "Roupas", "Outros")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, categorias)
         binding.spinnerCategoria.adapter = adapter
     }
@@ -67,23 +84,24 @@ class CriarAnuncioFragment : Fragment() {
         }
 
         binding.cardFoto1.setOnClickListener {
+            slotFotoSelecionado = 1
+            selecionarFoto.launch("image/*")
+        }
+        binding.cardFoto2.setOnClickListener {
+            slotFotoSelecionado = 2
+            selecionarFoto.launch("image/*")
+        }
+        binding.cardFoto3.setOnClickListener {
+            slotFotoSelecionado = 3
             selecionarFoto.launch("image/*")
         }
 
         binding.btnPublicarAnuncio.setOnClickListener {
-            // 1. Título
             val titulo = binding.etTituloAnuncio.text.toString()
-
-            // 2. Descrição
             val descricao = binding.etDescricaoAnuncio.text.toString()
-
-            // 3. Preço
             val precoStr = binding.etPrecoAnuncio.text.toString()
-
-            // 4. Categoria
             val categoria = binding.spinnerCategoria.selectedItem.toString()
 
-            // 5. Entrega (Botões selecionáveis - RadioButton)
             val radioSelecionadoId = binding.rgEntrega.checkedRadioButtonId
             val entrega =
                 if (radioSelecionadoId != -1) {
@@ -95,21 +113,18 @@ class CriarAnuncioFragment : Fragment() {
                     ""
                 }
 
-            // 6. Pagamento (Botões selecionáveis - CheckBox)
             val pagamentos = mutableListOf<String>()
             if (binding.cbDinheiro.isChecked) pagamentos.add("Dinheiro")
             if (binding.cbPix.isChecked) pagamentos.add("Pix")
             if (binding.cbCartao.isChecked) pagamentos.add("Cartão")
             val formasPagamento = pagamentos.joinToString(", ")
 
-            // Validação e Envio
             if (titulo.isNotEmpty() && precoStr.isNotEmpty() && categoria != "Selecione") {
                 val preco = precoStr.toDoubleOrNull() ?: 0.0
 
                 binding.btnPublicarAnuncio.text = "Publicando..."
                 binding.btnPublicarAnuncio.isEnabled = false
 
-                // --- MUDANÇA AQUI: Passando a uriFotoSelecionada ---
                 viewModel.publicarAnuncio(
                     titulo = titulo,
                     preco = preco,
@@ -117,7 +132,6 @@ class CriarAnuncioFragment : Fragment() {
                     categoria = categoria,
                     entrega = entrega,
                     formasPagamento = formasPagamento,
-                    fotoUri = uriFotoSelecionada, // <-- Passando a foto escolhida
                 )
             } else {
                 Toast.makeText(context, "Preencha Título, Preço e Categoria", Toast.LENGTH_SHORT).show()
