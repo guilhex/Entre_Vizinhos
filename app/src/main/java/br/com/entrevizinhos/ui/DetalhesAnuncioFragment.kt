@@ -6,26 +6,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import br.com.entrevizinhos.R
 import br.com.entrevizinhos.databinding.FragmentDetalhesAnuncioBinding
 import br.com.entrevizinhos.model.Anuncio
-import com.bumptech.glide.Glide
+import br.com.entrevizinhos.model.Usuario
+import br.com.entrevizinhos.ui.adapter.FotosPagerAdapter
+import br.com.entrevizinhos.viewmodel.PerfilViewModel
 
 class DetalhesAnuncioFragment : Fragment() {
-    private var _binding: FragmentDetalhesAnuncioBinding? = null
-    private val binding get() = _binding!!
+    private var bindingNullable: FragmentDetalhesAnuncioBinding? = null
+    private val binding get() = bindingNullable!!
 
     // SafeArgs: Esta linha "apanha" o pacote (Anuncio) que foi enviado pelo Feed
     private val args: DetalhesAnuncioFragmentArgs by navArgs()
+
+    private val perfilViewModel: PerfilViewModel by viewModels()
+
+    private var vendedorAtual: Usuario? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentDetalhesAnuncioBinding.inflate(inflater, container, false)
+        bindingNullable = FragmentDetalhesAnuncioBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,41 +49,65 @@ class DetalhesAnuncioFragment : Fragment() {
 
         // 3. Configuramos os botões
         setupListeners()
+
+        // toolbar
+        setupToolbar()
+
+        setupObservers(anuncio)
+    }
+
+    private fun setupToolbar() {
+        binding.toolbarDetalhes.setNavigationOnClickListener { findNavController().popBackStack() }
+    }
+
+    private fun setupFotos(fotos: List<String>) {
+        if (fotos.isNotEmpty()) {
+            binding.vpFotos.adapter = FotosPagerAdapter(fotos)
+        }
     }
 
     private fun setupDados(anuncio: Anuncio) {
         binding.apply {
             tvDetalheTitulo.text = anuncio.titulo
-            tvDetalhePreco.text = "R$ ${String.format("%.2f", anuncio.preco)}"
+            val precoFormatado = String.format(java.util.Locale.getDefault(), "%.2f", anuncio.preco)
+            tvDetalhePreco.text = getString(br.com.entrevizinhos.R.string.preco_format, precoFormatado)
             tvDetalheDescricao.text = anuncio.descricao
+            tvDetalheCategoria.text = anuncio.categoria
             tvDetalheLocal.text = anuncio.cidade
 
-            // Se houver fotos, carregamos a primeira com o Glide
+            // Se houver fotos, carregamos o carrossel
             if (anuncio.fotos.isNotEmpty()) {
-                Glide
-                    .with(root.context)
-                    .load(anuncio.fotos[0])
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .into(ivDetalheFoto)
+                setupFotos(anuncio.fotos)
             }
         }
     }
 
     private fun setupListeners() {
-        // Botão de Voltar (Seta na Toolbar)
-        binding.toolbarDetalhes.setNavigationOnClickListener {
-            findNavController().popBackStack()
+        binding.btnWhatsapp.setOnClickListener {
+            Toast.makeText(context, "Chat será implementado!", Toast.LENGTH_SHORT).show()
         }
 
-        // Botão de Contacto
-        binding.btnContato.setOnClickListener {
-            Toast.makeText(context, "Chat será implementado na Fase 3!", Toast.LENGTH_SHORT).show()
+        // Botão de denuncia
+        binding.btnDenunciar.setOnClickListener {
+            Toast.makeText(context, "Chat será implementado!", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setupObservers(anuncio: Anuncio) {
+        perfilViewModel.vendedor.observe(viewLifecycleOwner) { usuarioVendedor ->
+            usuarioVendedor?.let { usuario ->
+                binding.tvNomeVendedor.text = usuario.nome
+                println(usuario.nome)
+                binding.tvLocalVendedor.text = usuario.endereco
+                vendedorAtual = usuario
+            }
+        }
+
+        perfilViewModel.carregarVendedor(anuncio.vendedorId)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        bindingNullable = null
     }
 }

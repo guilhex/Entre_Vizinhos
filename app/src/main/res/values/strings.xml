@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Entre Vizinhos</string>
     <string name="default_web_client_id">245033633510-bbnvgccbaqtd0l6qmpba091tr3tr6kbl.apps.googleusercontent.com</string>
+    <string name="preco_format">R$ %1$s</string>
+    <string name="membro_desde_format">Membro desde %1$s</string>
 </resources>

@@ -27,37 +27,54 @@
         android:textColor="@color/black"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btnGoogleLogin"
+        app:layout_constraintBottom_toTopOf="@+id/tvSubtitulo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
 
     <TextView
+        android:id="@+id/tvSubtitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Faça login para anunciar e ver contatos"
         android:textAlignment="center"
+        android:textColor="@color/gray_text"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvBemVindo" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGoogleLogin"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="64dp"
-        android:backgroundTint="#FFFFFF"
-        android:drawableLeft="@android:drawable/ic_dialog_email"
+        android:layout_height="56dp"
+        android:layout_marginTop="48dp"
         android:text="Entrar com Google"
-        android:textColor="#757575"
-        android:elevation="4dp"
+        android:textColor="@color/text_secondary"
+        android:backgroundTint="@android:color/white"
         app:strokeColor="#DDDDDD"
         app:strokeWidth="1dp"
+        app:cornerRadius="8dp"
+        app:elevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnGuestLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubtitulo"
+        app:layout_constraintVertical_bias="1.0"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGuestLogin"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:text="Entrar como Visitante"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/green_primary"
+        app:cornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBemVindo" />
-
+        app:layout_constraintTop_toBottomOf="@+id/btnGoogleLogin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

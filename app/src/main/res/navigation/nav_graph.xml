@@ -5,13 +5,11 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
-    <!-- LOGIN -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="br.com.entrevizinhos.ui.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
-
         <action
             android:id="@+id/action_login_to_feed"
             app:destination="@id/feedFragment"
@@ -19,29 +17,22 @@
             app:popUpToInclusive="true" />
     </fragment>
 
-
-    <!-- FEED -->
     <fragment
         android:id="@+id/feedFragment"
         android:name="br.com.entrevizinhos.ui.FeedFragment"
         android:label="Início"
         tools:layout="@layout/fragment_feed">
-
         <action
             android:id="@+id/action_feedFragment_to_detalhesAnuncioFragment"
             app:destination="@id/detalhesAnuncioFragment" />
     </fragment>
 
-
-    <!-- COLEÇÃO -->
     <fragment
         android:id="@+id/colecaoFragment"
         android:name="br.com.entrevizinhos.ui.ColecaoFragment"
         android:label="Coleção"
         tools:layout="@layout/fragment_colecao" />
 
-
-    <!-- PERFIL -->
     <fragment
         android:id="@+id/perfilFragment"
         android:name="br.com.entrevizinhos.ui.PerfilFragment"
@@ -52,31 +43,45 @@
             android:id="@+id/action_perfil_to_criarAnuncio"
             app:destination="@id/criarAnuncioFragment" />
 
-        <!-- Mantido do 1º XML: Logout -->
         <action
             android:id="@+id/action_perfil_to_login"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_perfil_to_editarPerfil"
+            app:destination="@id/editarPerfilFragment" />
+
+        <action
+            android:id="@+id/action_perfil_to_detalhesAnuncio"
+            app:destination="@id/detalhesAnuncioFragment" />
     </fragment>
 
-
-    <!-- CRIAR ANÚNCIO -->
     <fragment
         android:id="@+id/criarAnuncioFragment"
         android:name="br.com.entrevizinhos.ui.CriarAnuncioFragment"
         android:label="Criar Anúncio"
         tools:layout="@layout/fragment_criar_anuncio" />
 
-
-    <!-- DETALHES DO ANÚNCIO -->
     <fragment
         android:id="@+id/detalhesAnuncioFragment"
         android:name="br.com.entrevizinhos.ui.DetalhesAnuncioFragment"
         android:label="Detalhes do Anúncio"
         tools:layout="@layout/fragment_detalhes_anuncio">
-
         <argument
             android:name="anuncio"
             app:argType="br.com.entrevizinhos.model.Anuncio" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editarPerfilFragment"
+        android:name="br.com.entrevizinhos.ui.EditarPerfilFragment"
+        android:label="Editar Perfil"
+        tools:layout="@layout/fragment_editar_perfil">
+        <argument
+            android:name="usuario"
+            app:argType="br.com.entrevizinhos.model.Usuario" />
     </fragment>
 
 </navigation>

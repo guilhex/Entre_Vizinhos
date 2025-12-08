@@ -5,9 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="#FFFFFF">
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
 
+    <!-- AppBar com Toolbar estilizada -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,17 +16,20 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbarDetalhes"
+            style="@style/AppToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/green_primary"
-            app:titleTextColor="@android:color/white"
+            app:navigationIcon="@android:drawable/ic_menu_revert"
             app:navigationIconTint="@android:color/white"
             app:title="Detalhes"
             app:titleCentered="true"
-            app:navigationIcon="@android:drawable/ic_menu_revert" />
+            app:titleTextColor="@android:color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Conteúdo rolável -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -36,106 +40,236 @@
             android:layout_height="wrap_content"
             android:paddingBottom="24dp">
 
-            <ImageView
-                android:id="@+id/ivDetalheFoto"
+            <!-- Carrossel de fotos (ViewPager2) -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vpFotos"
                 android:layout_width="0dp"
                 android:layout_height="250dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
+            <!-- Ícone de favorito sobre a foto -->
+            <ImageView
+                android:id="@+id/ivDetalheFavorito"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_chip_categoria"
+                android:backgroundTint="#80FFFFFF"
+                android:padding="8dp"
+                android:src="@drawable/ic_heart"
+                app:tint="@color/gray_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/vpFotos" />
+
+            <!-- Título do anúncio -->
             <TextView
                 android:id="@+id/tvDetalheTitulo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                tools:text="Bicicleta Aro 29 Seminova com marchas Shimano"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivDetalheFoto" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vpFotos"
+                tools:text="Bicicleta Aro 29 Seminova com marchas Shimano" />
 
+            <!-- Categoria (chip) -->
+            <TextView
+                android:id="@+id/tvDetalheCategoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_chip_categoria"
+                android:paddingStart="12dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="4dp"
+                android:textColor="@color/green_chip_text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/tvDetalheTitulo"
+                tools:text="Eletrônicos" />
+
+            <!-- Preço -->
             <TextView
                 android:id="@+id/tvDetalhePreco"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                tools:text="R$ 850,00"
-                android:textColor="#2E7D32"
+                android:textColor="@color/green_primary"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
-                app:layout_constraintTop_toBottomOf="@id/tvDetalheTitulo" />
+                app:layout_constraintTop_toBottomOf="@id/tvDetalheCategoria"
+                tools:text="R$ 850,00" />
 
+            <!-- Local -->
             <TextView
                 android:id="@+id/tvDetalheLocal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                tools:text="Vila Mariana, SP"
+                android:textColor="@color/gray_text"
                 android:textSize="14sp"
-                android:textColor="#757575"
                 app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
-                app:layout_constraintTop_toBottomOf="@id/tvDetalhePreco" />
+                app:layout_constraintTop_toBottomOf="@id/tvDetalhePreco"
+                tools:text="Urutaí, GO" />
 
+            <!-- Divider -->
             <View
                 android:id="@+id/viewDivider"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="#E0E0E0"
+                android:background="@color/gray_border"
                 app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvDetalheLocal" />
 
+            <!-- Label descrição -->
             <TextView
                 android:id="@+id/tvLabelDescricao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Descrição"
-                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textColor="#000000"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
                 app:layout_constraintTop_toBottomOf="@id/viewDivider" />
 
+            <!-- Texto descrição -->
             <TextView
                 android:id="@+id/tvDetalheDescricao"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                tools:text="Bicicleta em ótimo estado, usada poucas vezes. Pneus novos, travões regulados. Motivo da venda: mudança."
-                android:textSize="14sp"
                 android:lineSpacingExtra="4dp"
-                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvLabelDescricao" />
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/tvLabelDescricao"
+                tools:text="Bicicleta em ótimo estado, usada poucas vezes. Pneus novos, freios regulados. Motivo da venda: mudança." />
 
-            <Button
-                android:id="@+id/btnContato"
+            <!-- Card do vendedor -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/containerVendedor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:backgroundTint="@color/green_primary"
-                android:textColor="@android:color/white"
-                android:text="Entrar em Contato"
-                android:padding="12dp"
-                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                android:background="@drawable/bg_card_vendedor"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvDetalheDescricao"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/tvDetalheDescricao">
+
+                <TextView
+                    android:id="@+id/tvLabelVendedor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vendedor"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivAvatarVendedor"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_chip_categoria"
+                    android:backgroundTint="#E0E0E0"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_perfil"
+                    app:tint="#757575"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvLabelVendedor" />
+
+                <TextView
+                    android:id="@+id/tvNomeVendedor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ivAvatarVendedor"
+                    app:layout_constraintTop_toTopOf="@id/ivAvatarVendedor"
+                    tools:text="João Silva" />
+
+                <TextView
+                    android:id="@+id/tvLocalVendedor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="#757575"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ivAvatarVendedor"
+                    app:layout_constraintTop_toBottomOf="@id/tvNomeVendedor"
+                    tools:text="Urutaí, GO" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Botão principal de contato (WhatsApp) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnWhatsapp"
+                style="@style/AppButton.Primary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Contato WhatsApp"
+                app:cornerRadius="8dp"
+                app:icon="@android:drawable/stat_sys_speakerphone"
+                app:iconGravity="textStart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/containerVendedor" />
+
+            <!-- Botão denunciar -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDenunciar"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Denunciar"
+                android:textColor="#D32F2F"
+                app:cornerRadius="8dp"
+                app:strokeColor="#D32F2F"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/btnWhatsapp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
