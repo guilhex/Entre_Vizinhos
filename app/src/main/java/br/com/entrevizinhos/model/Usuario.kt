@@ -10,7 +10,8 @@ data class Usuario(
     val fotoUrl: String = "",
     val telefone: String = "",
     val endereco: String = "",
-    val cnpj: String = "",       // Novo campo
+    val cnpj: String = "", // Novo campo
     val membroDesde: Date = Date(), // Novo campo
-    val rating: Float = 0.0f
+    val rating: Float = 0.0f,
+    val favoritos: List<String> = emptyList(),
 ) : Serializable

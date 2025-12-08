@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.entrevizinhos.data.repository.AnuncioRepository
+import br.com.entrevizinhos.data.repository.UsuarioRepository
 import br.com.entrevizinhos.model.Anuncio
 import kotlinx.coroutines.launch
 
 class AnuncioViewModel : ViewModel() {
     private val anuncioRepository = AnuncioRepository()
+    private val usuarioRepository = UsuarioRepository()
 
     private val _anuncios = MutableLiveData<List<Anuncio>>() // serve pra apenas o viewmodel alterar
     val anuncios: LiveData<List<Anuncio>> = _anuncios // permite ler mas n alterar
