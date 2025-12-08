@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthRepository {
+    // A instância foi nomeada como 'auth' aqui
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
 
@@ -33,9 +34,9 @@ class AuthRepository {
                     val usuario = document.toObject(Usuario::class.java)
                     callback(usuario)
                 } else {
-                    // Usuário sem dados no banco, retorna dados do Google
+                    // Usuário sem dados no banco, retorna dados do Google ou anônimo
                     val email = auth.currentUser?.email ?: ""
-                    val nome = auth.currentUser?.displayName ?: "Vizinho"
+                    val nome = auth.currentUser?.displayName ?: "Vizinho Visitante"
                     val foto = auth.currentUser?.photoUrl?.toString() ?: ""
                     callback(Usuario(id = userId, email = email, nome = nome, fotoUrl = foto))
                 }
@@ -59,7 +60,14 @@ class AuthRepository {
             .addOnFailureListener { callback(false) }
     }
 
-    // --- CORREÇÃO DO LOGIN TRAVADO ---
+    // CORREÇÃO AQUI: Usando 'auth' em vez de 'firebaseAuth'
+    fun loginAnonymously(onComplete: (Boolean) -> Unit) {
+        auth.signInAnonymously()
+            .addOnCompleteListener { task ->
+                onComplete(task.isSuccessful)
+            }
+    }
+
     fun loginComGoogle(
         credential: AuthCredential,
         callback: (Boolean) -> Unit,

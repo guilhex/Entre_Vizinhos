@@ -10,7 +10,6 @@
     <color name="gray_border">#E0E0E0</color>
     <color name="text_primary">#333333</color>
     <color name="text_secondary">#666666</color>
-
     <color name="green_chip_background">#E6F4EA</color>
     <color name="green_chip_text">#166534</color>
 </resources>

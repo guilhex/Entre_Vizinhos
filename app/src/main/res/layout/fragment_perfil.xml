@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#F7FAF7">
+    android:background="@color/gray_background"
+    android:fitsSystemWindows="true">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarPerfil"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="#166534"
-        android:elevation="4dp"
-        app:title="Meu Perfil"
-        app:titleTextColor="@android:color/white" />
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="@style/AppToolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:title="Meu Perfil" />
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     tools:text="João Silva"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -64,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Membro desde 2025"
-                    android:textColor="#666666"
+                    android:textColor="@color/gray_text"
                     android:textSize="12sp" />
 
                 <LinearLayout
@@ -89,33 +93,30 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Ver avaliações"
-                        android:textColor="#166534"
+                        android:textColor="@color/green_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
+                style="@style/AppCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
+                android:layout_marginBottom="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:text="Informações de contato"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -123,7 +124,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Endereço"
-                        android:textColor="#666666"
+                        android:textColor="@color/gray_text"
                         android:textSize="12sp" />
 
                     <TextView
@@ -131,7 +132,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         tools:text="Rua das Flores, 123" />
 
@@ -139,7 +140,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Telefone"
-                        android:textColor="#666666"
+                        android:textColor="@color/gray_text"
                         android:textSize="12sp" />
 
                     <TextView
@@ -148,17 +149,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:drawablePadding="8dp"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         tools:text="(64) 99999-9999"
                         app:drawableEndCompat="@android:drawable/checkbox_on_background"
-                        app:drawableTint="#166534" />
+                        app:drawableTint="@color/green_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="E-mail"
-                        android:textColor="#666666"
+                        android:textColor="@color/gray_text"
                         android:textSize="12sp" />
 
                     <TextView
@@ -166,7 +167,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         tools:text="email@exemplo.com" />
 
@@ -174,14 +175,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="CNPJ"
-                        android:textColor="#666666"
+                        android:textColor="@color/gray_text"
                         android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/tvCnpj"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="16sp"
                         tools:text="00.000.000/0001-90" />
                 </LinearLayout>
@@ -195,31 +196,21 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAnunciar"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginBottom="12dp"
-                    android:backgroundTint="#166534"
-                    android:text="Anunciar"
-                    android:textColor="@color/white"
-                    app:cornerRadius="8dp" />
+                    style="@style/AppButton.Primary"
+                    android:text="Anunciar" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnEditarPerfil"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginBottom="12dp"
-                    android:text="Editar Perfil"
-                    android:textColor="#166534"
-                    app:cornerRadius="8dp"
-                    app:strokeColor="#166534"
-                    app:strokeWidth="1dp" />
+                    style="@style/AppButton.Secondary"
+                    android:layout_marginTop="12dp"
+                    android:text="Editar Perfil" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSair"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:text="Sair"
                     android:textColor="#D32F2F" />
             </LinearLayout>
@@ -232,7 +223,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="12dp"
                 android:text="Meus Anúncios"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -247,4 +238,4 @@
                 tools:listitem="@layout/item_anuncio" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,7 @@ import br.com.entrevizinhos.databinding.FragmentDetalhesAnuncioBinding
 import br.com.entrevizinhos.model.Anuncio
 import br.com.entrevizinhos.model.Usuario
 import br.com.entrevizinhos.viewmodel.PerfilViewModel
-import com.bumptech.glide.Glide
+import br.com.entrevizinhos.ui.adapter.FotosPagerAdapter
 
 class DetalhesAnuncioFragment : Fragment() {
     private var _binding: FragmentDetalhesAnuncioBinding? = null
@@ -27,11 +27,7 @@ class DetalhesAnuncioFragment : Fragment() {
 
     private var vendedorAtual: Usuario? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDetalhesAnuncioBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -52,6 +48,16 @@ class DetalhesAnuncioFragment : Fragment() {
         setupListeners()
 
         setupObservers(anuncio)
+    }
+
+    private fun setupToolbar() {
+        binding.toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
+    }
+
+    private fun setupFotos(fotos: List<String>) {
+        if (fotos.isNotEmpty()) {
+            binding.vpFotos.adapter = FotosPagerAdapter(fotos)
+        }
     }
 
     private fun setupDados(anuncio: Anuncio) {
@@ -75,12 +81,6 @@ class DetalhesAnuncioFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        // Botão de Voltar (Seta na Toolbar)
-        binding.toolbarDetalhes.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        // Botão de Contacto
         binding.btnWhatsapp.setOnClickListener {
             Toast.makeText(context, "Chat será implementado!", Toast.LENGTH_SHORT).show()
         }

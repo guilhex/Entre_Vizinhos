@@ -42,9 +42,16 @@ class FeedFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         setupRecyclerView()
         setupObservers()
         capturaCategoria()
+    }
+
+    private fun setupToolbar() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -73,7 +80,7 @@ class FeedFragment : Fragment() {
             // Esconde a barra de progresso
             binding.pbLoading.visibility = View.GONE
 
-            // Atualiza o adaptador
+            aplicarFiltros(listaAnuncios, getString(R.string.categoria_todos))
 
             aplicarFiltros(listaAnuncios, getString(R.string.categoria_todos)) // aciona para filtrar a lista de anuncios completa
 
@@ -103,7 +110,6 @@ class FeedFragment : Fragment() {
 
     private fun capturaCategoria() {
         binding.chipGroupCategorias.setOnCheckedStateChangeListener { group, checkedIds ->
-            // Como o ChipGroup está com singleSelection=true, sempre será 0 ou 1 id
             val checkedId = checkedIds.firstOrNull() ?: return@setOnCheckedStateChangeListener // se vier vazio cancela operação
 
             // Acha o Chip dentro do ChipGroup a partir do id selecionado

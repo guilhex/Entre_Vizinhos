@@ -16,4 +16,5 @@ data class Anuncio(
     val dataPublicacao: Date = Date(),
     val entrega: String = "",
     val formasPagamento: String = "",
+
 ) : Serializable

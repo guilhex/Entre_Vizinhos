@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Estilo padrão para Toolbar -->
+    <style name="AppToolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:background">@color/green_primary</item>
+        <item name="android:elevation">4dp</item>
+        <item name="titleTextColor">@android:color/white</item>
+        <item name="navigationIconTint">@android:color/white</item>
+    </style>
+
+    <!-- Estilo base para TextView -->
+    <style name="AppTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+
+    <!-- Estilo para títulos de seção -->
+    <style name="AppTextView.SectionTitle">
+        <item name="android:textColor">@color/green_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <!-- Estilo para botões primários -->
+    <style name="AppButton.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="backgroundTint">@color/green_primary</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <!-- Estilo para botões secundários -->
+    <style name="AppButton.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:textColor">@color/green_primary</item>
+        <item name="strokeColor">@color/green_primary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <!-- Estilo para TextInputLayout -->
+    <style name="AppTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/green_primary</item>
+        <item name="hintTextColor">@color/green_primary</item>
+        <item name="android:layout_marginBottom">12dp</item>
+    </style>
+
+    <!-- Estilo para Cards -->
+    <style name="AppCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+</resources>

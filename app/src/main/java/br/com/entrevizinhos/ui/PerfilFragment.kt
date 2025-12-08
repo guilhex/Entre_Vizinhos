@@ -22,7 +22,6 @@ class PerfilFragment : Fragment() {
     private var _binding: FragmentPerfilBinding? = null
     private val binding get() = _binding!!
 
-    // ViewModel instanciado com a extensão 'by viewModels()'
     private val viewModel: PerfilViewModel by viewModels()
 
     private lateinit var meusAnunciosAdapter: AnuncioAdapter
@@ -42,27 +41,30 @@ class PerfilFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupToolbar()
         setupUI()
         setupObservers()
 
-        // Busca os dados iniciais
         viewModel.carregarDados()
         viewModel.carregarMeusAnuncios()
     }
 
+    private fun setupToolbar() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
     private fun setupUI() {
-        // Botão Sair
         binding.btnSair.setOnClickListener {
             viewModel.deslogar()
         }
 
-        // Botão Anunciar
         binding.btnAnunciar.setOnClickListener {
             val action = PerfilFragmentDirections.actionPerfilToCriarAnuncio()
             findNavController().navigate(action)
         }
 
-        // Botão Editar Perfil - Causa do crash se 'usuarioAtual' for nulo
         binding.btnEditarPerfil.setOnClickListener {
             val usuarioAtual = viewModel.dadosUsuario.value
             if (usuarioAtual != null) {
@@ -73,9 +75,7 @@ class PerfilFragment : Fragment() {
             }
         }
 
-        // Lista de Anúncios (Grid)
         meusAnunciosAdapter = AnuncioAdapter(emptyList()) { anuncio ->
-            // Ação ao clicar no meu anúncio
             val action = PerfilFragmentDirections.actionPerfilToDetalhesAnuncio(anuncio)
             findNavController().navigate(action)
         }
@@ -86,18 +86,15 @@ class PerfilFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.dadosUsuario.observe(viewLifecycleOwner) { usuario ->
-            // Preenche os textos na tela
             binding.tvNomeUsuario.text = usuario.nome.ifEmpty { "Usuário" }
             binding.tvEmail.text = usuario.email
             binding.tvTelefone.text = usuario.telefone.ifEmpty { "Sem telefone" }
             binding.tvEndereco.text = usuario.endereco.ifEmpty { "Endereço não informado" }
             binding.tvCnpj.text = usuario.cnpj.ifEmpty { "-" }
 
-            // Data membro
             val df = SimpleDateFormat("yyyy", Locale("pt", "BR"))
             binding.tvMembroDesde.text = "Membro desde ${df.format(usuario.membroDesde)}"
 
-            // Foto
             if (usuario.fotoUrl.isNotEmpty()) {
                 if (usuario.fotoUrl.startsWith("data:image")) {
                     try {
