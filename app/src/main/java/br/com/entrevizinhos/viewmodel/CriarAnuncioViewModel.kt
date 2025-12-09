@@ -72,7 +72,6 @@ class CriarAnuncioViewModel : ViewModel() {
         }
     }
 
-    // [REFATORADO] Agora usa o Repository e Coroutines
     fun atualizarAnuncio(
         anuncioId: String,
         titulo: String,
