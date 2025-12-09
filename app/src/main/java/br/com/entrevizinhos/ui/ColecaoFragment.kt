@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.entrevizinhos.databinding.FragmentColecaoBinding
 import br.com.entrevizinhos.model.Anuncio
@@ -46,7 +47,9 @@ class ColecaoFragment : Fragment() {
                 listaAnuncios = emptyList(),
                 favoritosIds = anuncioViewModel.favoritosIds.value ?: emptySet(),
                 onAnuncioClick = { anuncio ->
-                    Toast.makeText(requireContext(), "Abrir detalhes: ${anuncio.titulo}", Toast.LENGTH_SHORT).show()
+                    // ===== NAVEGAR PARA DETALHES =====
+                    val action = ColecaoFragmentDirections.actionColecaoToDetalhesAnuncio(anuncio)
+                    findNavController().navigate(action)
                 },
                 onFavoritoClick = { anuncio ->
                     // Delegar toggle para o ViewModel

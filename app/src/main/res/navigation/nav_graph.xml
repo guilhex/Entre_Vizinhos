@@ -31,7 +31,11 @@
         android:id="@+id/colecaoFragment"
         android:name="br.com.entrevizinhos.ui.ColecaoFragment"
         android:label="Coleção"
-        tools:layout="@layout/fragment_colecao" />
+        tools:layout="@layout/fragment_colecao">
+        <action
+            android:id="@+id/action_colecao_to_detalhesAnuncio"
+            app:destination="@id/detalhesAnuncioFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/perfilFragment"
