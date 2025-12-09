@@ -163,12 +163,82 @@
                 app:layout_constraintTop_toBottomOf="@id/tvLabelDescricao"
                 tools:text="Bicicleta em ótimo estado, usada poucas vezes. Pneus novos, freios regulados. Motivo da venda: mudança." />
 
+            <!-- ===== FORMAS DE ENTREGA ===== -->
+            <TextView
+                android:id="@+id/tvLabelEntrega"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Entrega e Retirada"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/tvDetalheDescricao" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupEntregaDetalhes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/tvLabelEntrega">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipEntregaDetalhe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.Chip.Filter"
+                    app:chipBackgroundColor="@color/green_chip_background"
+                    app:chipStrokeColor="@color/gray_border"
+                    app:chipStrokeWidth="1dp"
+                    app:chipIcon="@android:drawable/ic_menu_mapmode"
+                    tools:text="Somente retirada" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- ===== FORMAS DE PAGAMENTO ===== -->
+            <TextView
+                android:id="@+id/tvLabelPagamento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Formas de Pagamento"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/chipGroupEntregaDetalhes" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupPagamentoDetalhes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintTop_toBottomOf="@id/tvLabelPagamento" />
+
+            <!-- Divider antes do vendedor -->
+            <View
+                android:id="@+id/viewDivider2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/gray_border"
+                app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chipGroupPagamentoDetalhes" />
+
             <!-- Card do vendedor -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/containerVendedor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/bg_card_vendedor"
                 android:clickable="true"
@@ -177,7 +247,7 @@
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tvDetalheTitulo"
-                app:layout_constraintTop_toBottomOf="@id/tvDetalheDescricao">
+                app:layout_constraintTop_toBottomOf="@id/viewDivider2">
 
                 <TextView
                     android:id="@+id/tvLabelVendedor"

@@ -34,18 +34,20 @@
             <androidx.cardview.widget.CardView
                 style="@style/AppCardView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <!-- Título -->
                     <TextView
                         style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Título do Anúncio"/>
+                        android:text="Título"/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/AppTextInputLayout"
@@ -60,6 +62,7 @@
                             android:inputType="textCapSentences"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Descrição -->
                     <TextView
                         style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
@@ -70,7 +73,7 @@
                         style="@style/AppTextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Detalhes do produto, tempo de uso...">
+                        android:hint="Descreva seu produto">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescricaoAnuncio"
@@ -80,6 +83,7 @@
                             android:inputType="textMultiLine"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Preço -->
                     <TextView
                         style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
@@ -90,7 +94,8 @@
                         style="@style/AppTextInputLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Valor em R$">
+                        android:hint="R$ 0,00"
+                        app:prefixText="R$ ">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPrecoAnuncio"
@@ -99,6 +104,7 @@
                             android:inputType="numberDecimal"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- Categoria -->
                     <TextView
                         style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
@@ -114,139 +120,184 @@
                         android:layout_marginBottom="16dp"
                         android:spinnerMode="dialog"/>
 
+                    <!-- Entrega e Retirada -->
                     <TextView
                         style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Entrega e Retirada"/>
 
-                    <RadioGroup
-                        android:id="@+id/rgEntrega"
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupEntrega"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="16dp">
+                        android:layout_marginBottom="16dp"
+                        app:singleSelection="true">
 
-                        <RadioButton
-                            android:id="@+id/rbRetirada"
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipRetirada"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Retirada"
-                            android:buttonTint="@color/green_primary"
-                            android:checked="true"/>
+                            android:text="Somente retirada"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            app:chipBackgroundColor="@color/green_chip_background"
+                            app:chipStrokeColor="@color/gray_border"
+                            app:chipStrokeWidth="1dp"/>
 
-                        <RadioButton
-                            android:id="@+id/rbEntrega"
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipEntrega"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Faço Entrega"
-                            android:buttonTint="@color/green_primary"
-                            android:layout_marginStart="16dp"/>
-                    </RadioGroup>
+                            android:text="Entrega disponível"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            app:chipBackgroundColor="@color/green_chip_background"
+                            app:chipStrokeColor="@color/gray_border"
+                            app:chipStrokeWidth="1dp"/>
 
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipRetiradaEntrega"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Retirada e entrega"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            app:chipBackgroundColor="@color/green_chip_background"
+                            app:chipStrokeColor="@color/gray_border"
+                            app:chipStrokeWidth="1dp"/>
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <!-- Formas de Pagamento -->
                     <TextView
                         style="@style/AppTextView.SectionTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Formas de Pagamento"/>
 
-                    <LinearLayout
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupPagamento"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginBottom="16dp">
-                        <CheckBox
-                            android:id="@+id/cbDinheiro"
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDinheiro"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/green_primary"
-                            android:text="Dinheiro"/>
-                        <CheckBox
-                            android:id="@+id/cbPix"
+                            android:text="Dinheiro"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            app:chipBackgroundColor="@color/green_chip_background"
+                            app:chipStrokeColor="@color/gray_border"
+                            app:chipStrokeWidth="1dp"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipPix"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/green_primary"
-                            android:text="Pix"/>
-                        <CheckBox
-                            android:id="@+id/cbCartao"
+                            android:text="PIX"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            app:chipBackgroundColor="@color/green_chip_background"
+                            app:chipStrokeColor="@color/gray_border"
+                            app:chipStrokeWidth="1dp"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCartaoDebito"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:buttonTint="@color/green_primary"
-                            android:text="Cartão Crédito/Débito"/>
-                    </LinearLayout>
+                            android:text="Cartão Débito"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            app:chipBackgroundColor="@color/green_chip_background"
+                            app:chipStrokeColor="@color/gray_border"
+                            app:chipStrokeWidth="1dp"/>
 
-                    <TextView
-                        style="@style/AppTextView.SectionTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fotos (Até 3)"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardFoto1"
-                            android:layout_width="0dp"
-                            android:layout_height="100dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            app:cardCornerRadius="8dp"
-                            app:cardBackgroundColor="@color/gray_background">
-                            <ImageView
-                                android:id="@+id/ivFoto1"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="centerCrop"
-                                android:src="@android:drawable/ic_menu_camera"
-                                android:padding="30dp"
-                                app:tint="@color/gray_text"/>
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardFoto2"
-                            android:layout_width="0dp"
-                            android:layout_height="100dp"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="8dp"
-                            app:cardCornerRadius="8dp"
-                            app:cardBackgroundColor="@color/gray_background">
-                            <ImageView
-                                android:id="@+id/ivFoto2"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="centerCrop"
-                                android:src="@android:drawable/ic_menu_camera"
-                                android:padding="30dp"
-                                app:tint="@color/gray_text"/>
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardFoto3"
-                            android:layout_width="0dp"
-                            android:layout_height="100dp"
-                            android:layout_weight="1"
-                            app:cardCornerRadius="8dp"
-                            app:cardBackgroundColor="@color/gray_background">
-                            <ImageView
-                                android:id="@+id/ivFoto3"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="centerCrop"
-                                android:src="@android:drawable/ic_menu_camera"
-                                android:padding="30dp"
-                                app:tint="@color/gray_text"/>
-                        </androidx.cardview.widget.CardView>
-                    </LinearLayout>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCartaoCredito"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cartão Crédito"
+                            style="@style/Widget.MaterialComponents.Chip.Filter"
+                            app:chipBackgroundColor="@color/green_chip_background"
+                            app:chipStrokeColor="@color/gray_border"
+                            app:chipStrokeWidth="1dp"/>
+                    </com.google.android.material.chip.ChipGroup>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <!-- Fotos -->
+            <TextView
+                style="@style/AppTextView.SectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Fotos (Até 3)"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardFoto1"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/gray_background">
+                    <ImageView
+                        android:id="@+id/ivFoto1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/camera"
+                        android:padding="30dp"
+                        app:tint="@color/gray_text"/>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardFoto2"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/gray_background">
+                    <ImageView
+                        android:id="@+id/ivFoto2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/camera"
+                        android:padding="30dp"
+                        app:tint="@color/gray_text"/>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardFoto3"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/gray_background">
+                    <ImageView
+                        android:id="@+id/ivFoto3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/camera"
+                        android:padding="30dp"
+                        app:tint="@color/gray_text"/>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPublicarAnuncio"
                 style="@style/AppButton.Primary"
                 android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
                 android:text="Publicar Agora"
                 android:textSize="16sp"/>
 

@@ -1,7 +1,9 @@
 package br.com.entrevizinhos.ui
 
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,32 +13,30 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import br.com.entrevizinhos.databinding.FragmentCriarAnuncioBinding
 import br.com.entrevizinhos.viewmodel.CriarAnuncioViewModel
 import com.google.android.material.chip.Chip
 
-class CriarAnuncioFragment : Fragment() {
+class EditarAnuncioFragment : Fragment() {
 
-    // ===== BINDING E VIEWMODEL =====
     private var _binding: FragmentCriarAnuncioBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: CriarAnuncioViewModel
 
-    // ===== VARIÁVEIS DE FOTOS =====
+    private val args: EditarAnuncioFragmentArgs by navArgs()
+
+    private var entregaSelecionada = ""
+    private val pagamentosSelecionados = mutableSetOf<String>()
+
     private var uriFoto1: Uri? = null
     private var uriFoto2: Uri? = null
     private var uriFoto3: Uri? = null
     private var slotFotoSelecionado = 1
 
-    // ===== VARIÁVEIS DE SELEÇÃO DOS CHIPS =====
-    private var entregaSelecionada = ""
-    private val pagamentosSelecionados = mutableSetOf<String>()
-
-    // ===== LAUNCHER PARA SELECIONAR FOTOS =====
     private val selecionarFoto =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                // Armazena a foto no slot correto e exibe preview
                 when (slotFotoSelecionado) {
                     1 -> {
                         uriFoto1 = uri
@@ -72,34 +72,119 @@ class CriarAnuncioFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializa o ViewModel
         viewModel = ViewModelProvider(this).get(CriarAnuncioViewModel::class.java)
 
-        // Configura os componentes da tela
+        val anuncio = args.anuncio
+
+        // Preenchendo os campos com os dados existentes
+        binding.toolbar.title = "Editar Anúncio"
+        binding.etTituloAnuncio.setText(anuncio.titulo)
+        binding.etDescricaoAnuncio.setText(anuncio.descricao)
+        binding.etPrecoAnuncio.setText(anuncio.preco.toString())
+
         setupToolbar()
-        setupSpinner()
-        setupListeners()
+        setupSpinner(anuncio.categoria)
+        setupChipsEntrega(anuncio.entrega)
+        setupChipsPagamento(anuncio.formasPagamento)
+        setupFotos(anuncio.fotos) // ===== ADICIONAR FOTOS EXISTENTES =====
+        setupFotoListeners()
+        setupListeners(anuncio)
         setupObservers()
     }
 
-    // ===== SETUP TOOLBAR =====
     private fun setupToolbar() {
-        // Volta para tela anterior ao clicar no ícone de voltar
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    // ===== SETUP SPINNER DE CATEGORIA =====
-    private fun setupSpinner() {
+    private fun setupSpinner(categoriaAtual: String) {
         val categorias = listOf("Selecione", "Móveis", "Eletrônicos", "Serviços", "Roupas", "Outros")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, categorias)
         binding.spinnerCategoria.adapter = adapter
+
+        val posicao = categorias.indexOf(categoriaAtual)
+        if (posicao >= 0) {
+            binding.spinnerCategoria.setSelection(posicao)
+        }
     }
 
-    // ===== SETUP DE LISTENERS =====
-    private fun setupListeners() {
-        // --- FOTOS ---
+    private fun setupChipsEntrega(entregaAtual: String) {
+        binding.chipGroupEntrega.setOnCheckedStateChangeListener { group, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                val chip = binding.root.findViewById<Chip>(checkedIds[0])
+                entregaSelecionada = chip.text.toString()
+            } else {
+                entregaSelecionada = ""
+            }
+        }
+
+        when (entregaAtual) {
+            "Somente retirada" -> binding.chipRetirada.isChecked = true
+            "Entrega disponível" -> binding.chipEntrega.isChecked = true
+            "Retirada e entrega" -> binding.chipRetiradaEntrega.isChecked = true
+        }
+    }
+
+    private fun setupChipsPagamento(formasPagamentoStr: String) {
+        binding.chipGroupPagamento.setOnCheckedStateChangeListener { group, checkedIds ->
+            pagamentosSelecionados.clear()
+
+            for (id in checkedIds) {
+                val chip = binding.root.findViewById<Chip>(id)
+                if (chip != null) {
+                    pagamentosSelecionados.add(chip.text.toString())
+                }
+            }
+        }
+
+        val formasPagamento = formasPagamentoStr.split(",").map { it.trim() }
+
+        for (forma in formasPagamento) {
+            when (forma) {
+                "Dinheiro" -> binding.chipDinheiro.isChecked = true
+                "PIX" -> binding.chipPix.isChecked = true
+                "Cartão Débito" -> binding.chipCartaoDebito.isChecked = true
+                "Cartão Crédito" -> binding.chipCartaoCredito.isChecked = true
+            }
+        }
+    }
+
+    // ===== CARREGAR FOTOS EXISTENTES =====
+    private fun setupFotos(fotos: List<String>) {
+        if (fotos.isNotEmpty()) {
+            for ((index, fotoString) in fotos.withIndex()) {
+                if (index >= 3) break // Máximo 3 fotos
+
+                if (fotoString.startsWith("data:image")) {
+                    try {
+                        val base64Clean = fotoString.substringAfter(",")
+                        val decodedBytes = Base64.decode(base64Clean, Base64.DEFAULT)
+                        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+
+                        when (index) {
+                            0 -> {
+                                binding.ivFoto1.setImageBitmap(bitmap)
+                                binding.ivFoto1.setPadding(0, 0, 0, 0)
+                            }
+                            1 -> {
+                                binding.ivFoto2.setImageBitmap(bitmap)
+                                binding.ivFoto2.setPadding(0, 0, 0, 0)
+                            }
+                            2 -> {
+                                binding.ivFoto3.setImageBitmap(bitmap)
+                                binding.ivFoto3.setPadding(0, 0, 0, 0)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupFotoListeners() {
         binding.cardFoto1.setOnClickListener {
             slotFotoSelecionado = 1
             selecionarFoto.launch("image/*")
@@ -112,113 +197,68 @@ class CriarAnuncioFragment : Fragment() {
             slotFotoSelecionado = 3
             selecionarFoto.launch("image/*")
         }
+    }
 
-        // --- CHIPS DE ENTREGA/RETIRADA ---
-        // ChipGroup com singleSelection=true: apenas 1 chip selecionado por vez
-        binding.chipGroupEntrega.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val chip = binding.root.findViewById<Chip>(checkedIds[0])
-                entregaSelecionada = chip.text.toString()
-            } else {
-                entregaSelecionada = ""
-            }
-        }
-
-        // --- CHIPS DE PAGAMENTO ---
-        // ChipGroup SEM singleSelection: múltiplos chips podem ser selecionados
-        binding.chipGroupPagamento.setOnCheckedStateChangeListener { group, checkedIds ->
-            pagamentosSelecionados.clear()
-
-            // Adiciona cada chip selecionado à lista
-            for (id in checkedIds) {
-                val chip = binding.root.findViewById<Chip>(id)
-                if (chip != null) {
-                    pagamentosSelecionados.add(chip.text.toString())
-                }
-            }
-        }
-
-        // --- BOTÃO PUBLICAR ANÚNCIO ---
+    private fun setupListeners(anuncio: br.com.entrevizinhos.model.Anuncio) {
+        binding.btnPublicarAnuncio.text = "Atualizar Anúncio"
         binding.btnPublicarAnuncio.setOnClickListener {
-            publicarAnuncio()
+            atualizarAnuncio(anuncio)
         }
     }
 
-    // ===== PUBLICAR ANÚNCIO =====
-    /**
-     * Valida todos os campos obrigatórios e envia o anúncio para o ViewModel
-     */
-    private fun publicarAnuncio() {
-        // Obtém valores dos campos de texto
+    private fun atualizarAnuncio(anuncio: br.com.entrevizinhos.model.Anuncio) {
         val titulo = binding.etTituloAnuncio.text.toString().trim()
         val descricao = binding.etDescricaoAnuncio.text.toString().trim()
         val precoStr = binding.etPrecoAnuncio.text.toString().trim()
         val categoria = binding.spinnerCategoria.selectedItem.toString()
 
-        // --- VALIDAÇÕES ---
-        // 1. Valida campos obrigatórios
         if (titulo.isEmpty() || precoStr.isEmpty() || categoria == "Selecione") {
             Toast.makeText(context, "Preencha Título, Preço e Categoria", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // 2. Valida entrega/retirada selecionada
         if (entregaSelecionada.isEmpty()) {
             Toast.makeText(context, "Selecione uma opção de Entrega/Retirada", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // 3. Valida formas de pagamento selecionadas
         if (pagamentosSelecionados.isEmpty()) {
             Toast.makeText(context, "Selecione pelo menos uma forma de pagamento", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // --- CONVERSÕES E PREPARAÇÃO DOS DADOS ---
         val preco = precoStr.toDoubleOrNull() ?: 0.0
-        val fotos = listOfNotNull(uriFoto1, uriFoto2, uriFoto3)
         val formasPagamento = pagamentosSelecionados.joinToString(", ")
 
-        // --- FEEDBACK VISUAL ---
-        binding.btnPublicarAnuncio.text = "Publicando..."
+        binding.btnPublicarAnuncio.text = "Atualizando..."
         binding.btnPublicarAnuncio.isEnabled = false
 
-        // --- ENVIA PARA O VIEWMODEL ---
-        viewModel.publicarAnuncio(
+        viewModel.atualizarAnuncio(
+            anuncioId = anuncio.id,
             titulo = titulo,
             preco = preco,
             descricao = descricao,
             categoria = categoria,
             entrega = entregaSelecionada,
             formasPagamento = formasPagamento,
-            fotos = fotos,
             context = requireContext(),
         )
     }
 
-    // ===== SETUP OBSERVERS =====
-    /**
-     * Observa o resultado da publicação do anúncio
-     * Se sucesso: volta para a tela anterior
-     * Se erro: mostra mensagem de erro
-     */
     private fun setupObservers() {
         viewModel.resultadoPublicacao.observe(viewLifecycleOwner) { sucesso ->
-            // Restaura o estado do botão
             binding.btnPublicarAnuncio.isEnabled = true
-            binding.btnPublicarAnuncio.text = "Publicar Agora"
+            binding.btnPublicarAnuncio.text = "Atualizar Anúncio"
 
             if (sucesso) {
-                Toast.makeText(context, "Anúncio Publicado com Sucesso!", Toast.LENGTH_SHORT).show()
-                // Volta para a tela anterior
+                Toast.makeText(context, "Anúncio Atualizado com Sucesso!", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } else {
-                Toast.makeText(context, "Erro ao publicar. Verifique sua conexão.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Erro ao atualizar. Verifique sua conexão.", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // ===== CLEANUP =====
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

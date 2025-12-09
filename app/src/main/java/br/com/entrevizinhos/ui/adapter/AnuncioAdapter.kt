@@ -4,20 +4,23 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.util.Base64
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import br.com.entrevizinhos.databinding.ItemAnuncioBinding
 import br.com.entrevizinhos.model.Anuncio
 import com.bumptech.glide.Glide
 
-// Adaptador padrão conforme Aula 08 + reatividade de favoritos (MVVM)
 class AnuncioAdapter(
     private var listaAnuncios: List<Anuncio>,
-    private var favoritosIds: Set<String>, // <-- estado vindo do ViewModel
-    private val onAnuncioClick: (Anuncio) -> Unit, // clique no card
-    private val onFavoritoClick: (Anuncio) -> Unit, // clique no coração
+    private var favoritosIds: Set<String>,
+    private val onAnuncioClick: (Anuncio) -> Unit,
+    private val onFavoritoClick: (Anuncio) -> Unit,
+    private val onEditarClick: ((Anuncio) -> Unit)? = null,
+    private val onDeletarClick: ((Anuncio) -> Unit)? = null,
+    private val mostrarBotoes: Boolean = false,
 ) : RecyclerView.Adapter<AnuncioAdapter.AnuncioViewHolder>() {
-    // ViewHolder usando ViewBinding (Aula 13)
+
     inner class AnuncioViewHolder(
         val binding: ItemAnuncioBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -32,60 +35,62 @@ class AnuncioAdapter(
 
             // --- LÓGICA DE IMAGEM ATUALIZADA ---
             if (anuncio.fotos.isNotEmpty()) {
-                val fotoString = anuncio.fotos[0] // Pega a primeira foto da lista
+                val fotoString = anuncio.fotos[0]
 
                 if (fotoString.startsWith("data:image")) {
-                    // CASO 1: Imagem salva como Texto (Base64) - Estratégia sem Storage
                     try {
-                        // Limpa o prefixo se necessário (ex: "data:image/jpeg;base64,")
                         val base64Clean = fotoString.substringAfter(",")
-
-                        // Converte o texto para bytes
                         val decodedBytes = Base64.decode(base64Clean, Base64.DEFAULT)
-
-                        // Converte bytes para Bitmap (Imagem)
                         val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
-
-                        // Define na tela
                         ivAnuncioFoto.setImageBitmap(bitmap)
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        // Se der erro na conversão, mostra ícone de erro
                         ivAnuncioFoto.setImageResource(android.R.drawable.ic_menu_report_image)
                     }
                 } else {
-                    // CASO 2: É um Link/URL (Se você ativar o Storage no futuro)
                     Glide
                         .with(root.context)
                         .load(fotoString)
                         .into(ivAnuncioFoto)
                 }
             } else {
-                // CASO 3: Nenhuma foto salva
                 ivAnuncioFoto.setImageResource(android.R.drawable.ic_menu_gallery)
             }
-            // ------------------------------------
 
-            // Define o estado do coração de forma determinística
+            // Define o estado do coração
             if (isFavorito) {
                 ivFavorito.setColorFilter(Color.RED)
             } else {
                 ivFavorito.colorFilter = null
             }
 
-            // 2) Clique no item inteiro -> navegação para detalhes
+            // Clique no item inteiro
             root.setOnClickListener {
                 onAnuncioClick(anuncio)
             }
 
-            // 3) Clique no coração -> delega para o ViewModel (via Fragment)
+            // Clique no coração
             ivFavorito.setOnClickListener {
                 onFavoritoClick(anuncio)
+            }
+
+            // ===== BOTÕES DE EDITAR/DELETAR =====
+            if (mostrarBotoes) {
+                containerBotoes.visibility = View.VISIBLE
+
+                btnEditarAnuncio.setOnClickListener {
+                    onEditarClick?.invoke(anuncio)
+                }
+
+                btnDeletarAnuncio.setOnClickListener {
+                    onDeletarClick?.invoke(anuncio)
+                }
+            } else {
+                containerBotoes.visibility = View.GONE
             }
         }
     }
 
-    // Cria o visual do item (infla o layout)
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -99,7 +104,6 @@ class AnuncioAdapter(
         return AnuncioViewHolder(binding)
     }
 
-    // Preenche os dados (bind)
     override fun onBindViewHolder(
         holder: AnuncioViewHolder,
         position: Int,
@@ -109,7 +113,6 @@ class AnuncioAdapter(
         holder.bind(anuncio, isFavorito)
     }
 
-    // Atualiza lista + estado de favoritos de forma reativa
     fun atualizarLista(
         novaLista: List<Anuncio>,
         novosFavoritos: Set<String>,
@@ -119,6 +122,5 @@ class AnuncioAdapter(
         notifyDataSetChanged()
     }
 
-    // Retorna o tamanho da lista
     override fun getItemCount(): Int = listaAnuncios.size
 }

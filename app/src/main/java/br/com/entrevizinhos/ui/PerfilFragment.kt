@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -86,9 +87,17 @@ class PerfilFragment : Fragment() {
                     findNavController().navigate(action)
                 },
                 onFavoritoClick = { _ ->
-                    // Favoritar a partir do perfil não implementado — mostrar toast
                     Toast.makeText(requireContext(), "Favoritar não implementado aqui", Toast.LENGTH_SHORT).show()
                 },
+                onEditarClick = { anuncio ->
+                    // ===== NAVEGAR PARA EDITAR ANÚNCIO =====
+                    val action = PerfilFragmentDirections.actionPerfilToEditarAnuncio(anuncio)
+                    findNavController().navigate(action)
+                },
+                onDeletarClick = { anuncio ->
+                    mostrarDialogoDeletarAnuncio(anuncio)
+                },
+                mostrarBotoes = true,
             )
 
         binding.rvMeusAnuncios.layoutManager = GridLayoutManager(context, 2)
@@ -147,6 +156,31 @@ class PerfilFragment : Fragment() {
                 val action = PerfilFragmentDirections.actionPerfilToLogin()
                 findNavController().navigate(action)
                 Toast.makeText(context, "Sessão encerrada", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // ===== DIÁLOGO PARA DELETAR ANÚNCIO =====
+    private fun mostrarDialogoDeletarAnuncio(anuncio: br.com.entrevizinhos.model.Anuncio) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Deletar Anúncio")
+            .setMessage("Tem certeza que deseja deletar \"${anuncio.titulo}\"? Esta ação não pode ser desfeita.")
+            .setNegativeButton("Cancelar") { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton("Deletar") { dialog, _ ->
+                deletarAnuncio(anuncio)
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    // ===== DELETAR ANÚNCIO =====
+    private fun deletarAnuncio(anuncio: br.com.entrevizinhos.model.Anuncio) {
+        viewModel.deletarAnuncio(anuncio.id) { sucesso ->
+            if (sucesso) {
+                Toast.makeText(requireContext(), "Anúncio deletado com sucesso!", Toast.LENGTH_SHORT).show()
+                viewModel.carregarMeusAnuncios() // Recarrega a lista
+            } else {
+                Toast.makeText(requireContext(), "Erro ao deletar anúncio", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -56,38 +56,28 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // Navegação (Fragment e UI)
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7") // ou versão mais recente
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
-    // firebase
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
-    // --- FIREBASE (Essencial para o AuthRepository) ---
-    // Importa a plataforma Firebase (BoM) - gerencia versões automaticamente
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
-
-    // Autenticação (Login)
     implementation("com.google.firebase:firebase-auth")
-
-    // Banco de Dados (Firestore)
-    implementation("com.google.firebase:firebase-firestore")
-
-    // Armazenamento de Imagens (Storage) - se for usar foto de perfil
     implementation("com.google.firebase:firebase-storage")
 
-    // --- IMAGENS (Glide) ---
-    // Para carregar a foto do perfil redonda
+    // Imagens (Glide)
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
-    // --- ARQUITETURA MVVM ---
-    // ViewModel e LiveData (Para criar o PerfilViewModel)
+    // EXIF para corrigir rotação de fotos
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
+
+    // Arquitetura MVVM
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
-
-    // Fragment KTX (Para usar 'by viewModels()')
     implementation("androidx.fragment:fragment-ktx:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
-    // google login
+
+    // Google Login
     implementation("com.google.android.gms:play-services-auth:21.0.0")
 }

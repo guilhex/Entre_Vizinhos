@@ -9,6 +9,7 @@ import br.com.entrevizinhos.data.repository.AuthRepository
 import br.com.entrevizinhos.data.repository.UsuarioRepository
 import br.com.entrevizinhos.model.Anuncio
 import br.com.entrevizinhos.model.Usuario
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class PerfilViewModel : ViewModel() {
@@ -50,6 +51,18 @@ class PerfilViewModel : ViewModel() {
             }
         }
     }
+    fun deletarAnuncio(anuncioId: String, callback: (Boolean) -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("anuncios").document(anuncioId).delete()
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
 
     // Desloga do Firebase
     fun deslogar() {

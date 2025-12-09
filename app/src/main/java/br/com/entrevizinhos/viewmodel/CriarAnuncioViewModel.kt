@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.entrevizinhos.data.repository.AnuncioRepository
 import br.com.entrevizinhos.data.repository.AuthRepository
 import br.com.entrevizinhos.model.Anuncio
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import java.util.Date
 
@@ -19,7 +20,6 @@ class CriarAnuncioViewModel : ViewModel() {
     private val _resultadoPublicacao = MutableLiveData<Boolean>()
     val resultadoPublicacao: LiveData<Boolean> = _resultadoPublicacao
 
-    // Função atualizada para aceitar TODOS os campos do formulário
     fun publicarAnuncio(
         titulo: String,
         preco: Double,
@@ -63,5 +63,36 @@ class CriarAnuncioViewModel : ViewModel() {
         } else {
             _resultadoPublicacao.postValue(false)
         }
+    }
+
+    // ===== ATUALIZAR ANÚNCIO =====
+    fun atualizarAnuncio(
+        anuncioId: String,
+        titulo: String,
+        preco: Double,
+        descricao: String,
+        categoria: String,
+        entrega: String,
+        formasPagamento: String,
+        context: Context,
+    ) {
+        val db = FirebaseFirestore.getInstance()
+
+        val anuncioAtualizado = mapOf(
+            "titulo" to titulo,
+            "preco" to preco,
+            "descricao" to descricao,
+            "categoria" to categoria,
+            "entrega" to entrega,
+            "formasPagamento" to formasPagamento,
+        )
+
+        db.collection("anuncios").document(anuncioId).update(anuncioAtualizado)
+            .addOnSuccessListener {
+                _resultadoPublicacao.postValue(true)
+            }
+            .addOnFailureListener {
+                _resultadoPublicacao.postValue(false)
+            }
     }
 }

@@ -14,6 +14,7 @@ import br.com.entrevizinhos.model.Anuncio
 import br.com.entrevizinhos.model.Usuario
 import br.com.entrevizinhos.ui.adapter.FotosPagerAdapter
 import br.com.entrevizinhos.viewmodel.PerfilViewModel
+import com.google.android.material.chip.Chip
 
 class DetalhesAnuncioFragment : Fragment() {
     private var bindingNullable: FragmentDetalhesAnuncioBinding? = null
@@ -47,7 +48,11 @@ class DetalhesAnuncioFragment : Fragment() {
         // 2. Preenchemos a tela
         setupDados(anuncio)
 
-        // 3. Configuramos os botões
+        // 3. Populamos os chips de entrega e pagamento
+        setupChipsEntrega(anuncio.entrega)
+        setupChipsPagamento(anuncio.formasPagamento)
+
+        // 4. Configuramos os botões
         setupListeners()
 
         // toolbar
@@ -78,6 +83,53 @@ class DetalhesAnuncioFragment : Fragment() {
             // Se houver fotos, carregamos o carrossel
             if (anuncio.fotos.isNotEmpty()) {
                 setupFotos(anuncio.fotos)
+            }
+        }
+    }
+
+    // ===== SETUP CHIPS DE ENTREGA =====
+    /**
+     * Popula o ChipGroup com a forma de entrega/retirada do anúncio
+     * Recebe uma String como "Somente retirada" e cria um chip correspondente
+     */
+    private fun setupChipsEntrega(entrega: String) {
+        binding.chipGroupEntregaDetalhes.removeAllViews()
+
+        if (entrega.isNotEmpty()) {
+            // Cria um novo chip para a forma de entrega
+            val chip = Chip(requireContext())
+            chip.text = entrega
+            chip.isClickable = false
+            chip.isCheckable = false
+            chip.setBackgroundColor(resources.getColor(br.com.entrevizinhos.R.color.green_chip_background, null))
+            chip.setTextColor(resources.getColor(br.com.entrevizinhos.R.color.green_chip_text, null))
+
+            binding.chipGroupEntregaDetalhes.addView(chip)
+        }
+    }
+
+    // ===== SETUP CHIPS DE PAGAMENTO =====
+    /**
+     * Popula o ChipGroup com as formas de pagamento do anúncio
+     * Recebe uma String como "Dinheiro, PIX, Cartão Crédito" e cria chips para cada uma
+     */
+    private fun setupChipsPagamento(formasPagamento: String) {
+        binding.chipGroupPagamentoDetalhes.removeAllViews()
+
+        if (formasPagamento.isNotEmpty()) {
+            // Divide a string por vírgula e cria um chip para cada forma de pagamento
+            val pagamentos = formasPagamento.split(",").map { it.trim() }
+
+            for (pagamento in pagamentos) {
+                // Cria um novo chip
+                val chip = Chip(requireContext())
+                chip.text = pagamento
+                chip.isClickable = false
+                chip.isCheckable = false
+                chip.setBackgroundColor(resources.getColor(br.com.entrevizinhos.R.color.green_chip_background, null))
+                chip.setTextColor(resources.getColor(br.com.entrevizinhos.R.color.green_chip_text, null))
+
+                binding.chipGroupPagamentoDetalhes.addView(chip)
             }
         }
     }

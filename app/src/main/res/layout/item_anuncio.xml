@@ -85,6 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/bg_chip_categoria"
             android:paddingStart="12dp"
             android:paddingTop="4dp"
@@ -94,8 +95,47 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tvTitulo"
-            app:layout_constraintTop_toBottomOf="@id/tvLocalizacao"
-            tools:text="Móveis" />
+            app:layout_constraintTop_toBottomOf="@id/tvLocalizacao" />
+
+        <!-- ===== BOTÕES DE EDITAR/DELETAR ===== -->
+        <LinearLayout
+            android:id="@+id/containerBotoes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:orientation="horizontal"
+            android:spacing="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCategoria">
+
+            <!-- Botão Editar -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditarAnuncio"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="Editar"
+                android:textSize="12sp"
+                app:cornerRadius="6dp"
+                app:strokeWidth="1dp" />
+
+            <!-- Botão Deletar -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeletarAnuncio"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:text="Deletar"
+                android:textColor="#D32F2F"
+                android:textSize="12sp"
+                app:cornerRadius="6dp"
+                app:strokeColor="#D32F2F"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
