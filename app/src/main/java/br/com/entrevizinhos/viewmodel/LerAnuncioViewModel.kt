@@ -11,53 +11,53 @@ import br.com.entrevizinhos.data.repository.UsuarioRepository
 import br.com.entrevizinhos.model.Anuncio
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel responsável por carregar e gerenciar anúncios e favoritos
+ * Compartilhado entre FeedFragment e outros fragments que exibem listas
+ */
 class LerAnuncioViewModel : ViewModel() {
-    // Repositórios
-    private val anuncioRepository = AnuncioRepository()
-    private val usuarioRepository = UsuarioRepository()
-    private val authRepository = AuthRepository()
+    private val anuncioRepository = AnuncioRepository() // Fonte de dados dos anúncios
+    private val usuarioRepository = UsuarioRepository() // Gerencia favoritos
+    private val authRepository = AuthRepository() // Estado de autenticação
 
-    // LiveData: anúncios
+    // Cache local da lista completa de anúncios
     private val _anuncios = MutableLiveData<List<Anuncio>>()
-    val anuncios: LiveData<List<Anuncio>> get() = _anuncios
+    val anuncios: LiveData<List<Anuncio>> get() = _anuncios // Observável pela UI
 
-    // LiveData: favoritos (ids)
+    // Cache local dos IDs favoritados (para UI rápida)
     private val _favoritosIds = MutableLiveData<Set<String>>(emptySet())
-    val favoritosIds: LiveData<Set<String>> get() = _favoritosIds
+    val favoritosIds: LiveData<Set<String>> get() = _favoritosIds // Observável pela UI
 
     init {
-        buscarAnuncios()
-        carregarFavoritosDoUsuario()
+        buscarAnuncios() // Carrega dados iniciais
+        carregarFavoritosDoUsuario() // Carrega preferências do usuário
     }
 
-    // Busca anúncios
+    // Busca e atualiza cache local com todos os anúncios disponíveis
     fun buscarAnuncios() {
-        viewModelScope.launch {
-            val lista = anuncioRepository.getAnuncios()
-            _anuncios.value = lista
+        viewModelScope.launch { // Operação assíncrona
+            val lista = anuncioRepository.getAnuncios() // Consulta Firestore
+            _anuncios.value = lista // Atualiza LiveData (notifica observers)
         }
     }
 
-    // Carrega favoritos do usuário
+    // Carrega preferências de favoritos do usuário atual
     private fun carregarFavoritosDoUsuario() {
-        val usuarioAtual = authRepository.getCurrentUser() ?: return
+        val usuarioAtual = authRepository.getCurrentUser() ?: return // Sai se não logado
 
-        viewModelScope.launch {
-            val usuario = usuarioRepository.getUsuario(usuarioAtual.uid)
-
-            // Garante lista vazia se null
-            val favoritos = usuario?.favoritos ?: emptyList()
-            _favoritosIds.value = favoritos.toSet()
+        viewModelScope.launch { // Operação assíncrona
+            val usuario = usuarioRepository.getUsuario(usuarioAtual.uid) // Busca perfil
+            val favoritos = usuario?.favoritos ?: emptyList() // Lista ou vazia
+            _favoritosIds.value = favoritos.toSet() // Converte para Set (busca rápida)
         }
     }
 
-    // Alterna favorito
+    // Adiciona ou remove anúncio dos favoritos
     fun onFavoritoClick(anuncioId: String) {
         val usuarioAtual = authRepository.getCurrentUser()
 
         if (usuarioAtual == null) {
             Log.e("AnuncioViewModel", "Usuário não logado. Não é possível favoritar.")
-            // poderia notificar erro
             return
         }
 
@@ -67,22 +67,18 @@ class LerAnuncioViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            // Lê favoritos
+            // Verifica estado atual dos favoritos
             val favoritosAtuais = _favoritosIds.value ?: emptySet()
             val estaFavoritado = anuncioId in favoritosAtuais
-
-            // Decide operação: true = adicionar, false = remover
             val adicionar = !estaFavoritado
-
-            // Estado anterior para rollback se falhar
             val anterior = favoritosAtuais
 
-            // Atualiza otimista no LiveData
+            // Atualiza UI otimisticamente
             val novos = if (adicionar) favoritosAtuais + anuncioId else favoritosAtuais - anuncioId
             _favoritosIds.value = novos
             Log.d("AnuncioViewModel", "[optimistic] anuncioId=$anuncioId adicionar=$adicionar novosFavoritos=$novos")
 
-            // Persiste via UsuarioRepository (agora recebe operação)
+            // Persiste no Firestore
             val sucesso =
                 try {
                     usuarioRepository.setFavorito(usuarioId = usuarioAtual.uid, anuncioId = anuncioId, adicionar = adicionar)
@@ -91,13 +87,12 @@ class LerAnuncioViewModel : ViewModel() {
                     false
                 }
 
+            // Reverte se falhou
             if (!sucesso) {
                 Log.e("AnuncioViewModel", "Falha ao persistir favorito para $anuncioId. Revertendo UI.")
                 _favoritosIds.value = anterior
             } else {
                 Log.d("AnuncioViewModel", "[persisted] anuncioId=$anuncioId adicionar=$adicionar")
-                // Atualiza estado com o que está no banco para manter consistência (opcional)
-                // Poderíamos recarregar do repo, mas aqui confiamos na operação atômica
             }
         }
     }

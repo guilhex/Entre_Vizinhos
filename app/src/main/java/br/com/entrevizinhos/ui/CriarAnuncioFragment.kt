@@ -15,28 +15,30 @@ import br.com.entrevizinhos.databinding.FragmentCriarAnuncioBinding
 import br.com.entrevizinhos.viewmodel.CriarAnuncioViewModel
 import com.google.android.material.chip.Chip
 
+/**
+ * Fragment responsável por criar novos anúncios
+ */
 class CriarAnuncioFragment : Fragment() {
 
-    // ===== BINDING E VIEWMODEL =====
     private var _binding: FragmentCriarAnuncioBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: CriarAnuncioViewModel
 
-    // ===== VARIÁVEIS DE FOTOS =====
+    // Variáveis para gerenciar fotos
     private var uriFoto1: Uri? = null
     private var uriFoto2: Uri? = null
     private var uriFoto3: Uri? = null
     private var slotFotoSelecionado = 1
 
-    // ===== VARIÁVEIS DE SELEÇÃO DOS CHIPS =====
+    // Variáveis para seleções do usuário
     private var entregaSelecionada = ""
     private val pagamentosSelecionados = mutableSetOf<String>()
 
-    // ===== LAUNCHER PARA SELECIONAR FOTOS =====
+    // Launcher para seleção de fotos da galeria
     private val selecionarFoto =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                // Armazena a foto no slot correto e exibe preview
+                // Armazena foto no slot correto e mostra preview
                 when (slotFotoSelecionado) {
                     1 -> {
                         uriFoto1 = uri
@@ -72,34 +74,33 @@ class CriarAnuncioFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializa o ViewModel
+        // Inicializa ViewModel
         viewModel = ViewModelProvider(this).get(CriarAnuncioViewModel::class.java)
 
-        // Configura os componentes da tela
+        // Configura componentes da tela
         setupToolbar()
         setupSpinner()
         setupListeners()
         setupObservers()
     }
 
-    // ===== SETUP TOOLBAR =====
+    // Configura toolbar com botão voltar
     private fun setupToolbar() {
-        // Volta para tela anterior ao clicar no ícone de voltar
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    // ===== SETUP SPINNER DE CATEGORIA =====
+    // Configura spinner de categorias
     private fun setupSpinner() {
         val categorias = listOf("Selecione", "Móveis", "Eletrônicos", "Serviços", "Roupas", "Outros")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, categorias)
         binding.spinnerCategoria.adapter = adapter
     }
 
-    // ===== SETUP DE LISTENERS =====
+    // Configura listeners dos elementos da tela
     private fun setupListeners() {
-        // --- FOTOS ---
+        // Listeners para seleção de fotos
         binding.cardFoto1.setOnClickListener {
             slotFotoSelecionado = 1
             selecionarFoto.launch("image/*")
@@ -113,8 +114,7 @@ class CriarAnuncioFragment : Fragment() {
             selecionarFoto.launch("image/*")
         }
 
-        // --- CHIPS DE ENTREGA/RETIRADA ---
-        // ChipGroup com singleSelection=true: apenas 1 chip selecionado por vez
+        // Listener para chips de entrega (seleção única)
         binding.chipGroupEntrega.setOnCheckedStateChangeListener { group, checkedIds ->
             if (checkedIds.isNotEmpty()) {
                 val chip = binding.root.findViewById<Chip>(checkedIds[0])
@@ -124,12 +124,9 @@ class CriarAnuncioFragment : Fragment() {
             }
         }
 
-        // --- CHIPS DE PAGAMENTO ---
-        // ChipGroup SEM singleSelection: múltiplos chips podem ser selecionados
+        // Listener para chips de pagamento (seleção múltipla)
         binding.chipGroupPagamento.setOnCheckedStateChangeListener { group, checkedIds ->
             pagamentosSelecionados.clear()
-
-            // Adiciona cada chip selecionado à lista
             for (id in checkedIds) {
                 val chip = binding.root.findViewById<Chip>(id)
                 if (chip != null) {
@@ -138,52 +135,46 @@ class CriarAnuncioFragment : Fragment() {
             }
         }
 
-        // --- BOTÃO PUBLICAR ANÚNCIO ---
+        // Listener do botão publicar
         binding.btnPublicarAnuncio.setOnClickListener {
             publicarAnuncio()
         }
     }
 
-    // ===== PUBLICAR ANÚNCIO =====
-    /**
-     * Valida todos os campos obrigatórios e envia o anúncio para o ViewModel
-     */
+    // Valida campos e publica anúncio
     private fun publicarAnuncio() {
-        // Obtém valores dos campos de texto
+        // Coleta dados dos campos
         val titulo = binding.etTituloAnuncio.text.toString().trim()
         val descricao = binding.etDescricaoAnuncio.text.toString().trim()
         val precoStr = binding.etPrecoAnuncio.text.toString().trim()
         val categoria = binding.spinnerCategoria.selectedItem.toString()
 
-        // --- VALIDAÇÕES ---
-        // 1. Valida campos obrigatórios
+        // Validações obrigatórias
         if (titulo.isEmpty() || precoStr.isEmpty() || categoria == "Selecione") {
             Toast.makeText(context, "Preencha Título, Preço e Categoria", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // 2. Valida entrega/retirada selecionada
         if (entregaSelecionada.isEmpty()) {
             Toast.makeText(context, "Selecione uma opção de Entrega/Retirada", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // 3. Valida formas de pagamento selecionadas
         if (pagamentosSelecionados.isEmpty()) {
             Toast.makeText(context, "Selecione pelo menos uma forma de pagamento", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // --- CONVERSÕES E PREPARAÇÃO DOS DADOS ---
+        // Prepara dados para envio
         val preco = precoStr.toDoubleOrNull() ?: 0.0
         val fotos = listOfNotNull(uriFoto1, uriFoto2, uriFoto3)
         val formasPagamento = pagamentosSelecionados.joinToString(", ")
 
-        // --- FEEDBACK VISUAL ---
+        // Feedback visual durante publicação
         binding.btnPublicarAnuncio.text = "Publicando..."
         binding.btnPublicarAnuncio.isEnabled = false
 
-        // --- ENVIA PARA O VIEWMODEL ---
+        // Envia para ViewModel
         viewModel.publicarAnuncio(
             titulo = titulo,
             preco = preco,
@@ -196,29 +187,21 @@ class CriarAnuncioFragment : Fragment() {
         )
     }
 
-    // ===== SETUP OBSERVERS =====
-    /**
-     * Observa o resultado da publicação do anúncio
-     * Se sucesso: volta para a tela anterior
-     * Se erro: mostra mensagem de erro
-     */
+    // Observa resultado da publicação
     private fun setupObservers() {
         viewModel.resultadoPublicacao.observe(viewLifecycleOwner) { sucesso ->
-            // Restaura o estado do botão
+            // Restaura estado do botão
             binding.btnPublicarAnuncio.isEnabled = true
             binding.btnPublicarAnuncio.text = "Publicar Agora"
 
             if (sucesso) {
                 Toast.makeText(context, "Anúncio Publicado com Sucesso!", Toast.LENGTH_SHORT).show()
-                // Volta para a tela anterior
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "Erro ao publicar. Verifique sua conexão.", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
-    // ===== CLEANUP =====
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

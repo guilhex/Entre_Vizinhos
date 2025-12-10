@@ -12,14 +12,18 @@ import br.com.entrevizinhos.databinding.FragmentColecaoBinding
 import br.com.entrevizinhos.ui.adapter.AnuncioAdapter
 import br.com.entrevizinhos.viewmodel.LerAnuncioViewModel
 
+/**
+ * Fragment que exibe a coleção de anúncios favoritados pelo usuário
+ * Filtra automaticamente apenas os itens marcados como favoritos
+ */
 class ColecaoFragment : Fragment() {
-    private var bindingNullable: FragmentColecaoBinding? = null
-    private val binding get() = bindingNullable!!
+    private var bindingNullable: FragmentColecaoBinding? = null // Binding nullável para cleanup
+    private val binding get() = bindingNullable!! // Acesso seguro ao binding
 
-    // Compartilha o ViewModel com outras telas
+    // ViewModel compartilhado para manter consistência com outras telas
     private val lerAnuncioViewModel: LerAnuncioViewModel by activityViewModels()
 
-    private lateinit var adapter: AnuncioAdapter
+    private lateinit var adapter: AnuncioAdapter // Adapter para RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,42 +39,46 @@ class ColecaoFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-        setupObservers()
+        setupRecyclerView() // Configura lista de favoritos
+        setupObservers() // Observa mudanças nos dados
     }
 
+    // Configura RecyclerView para exibir apenas favoritos
     private fun setupRecyclerView() {
         adapter =
             AnuncioAdapter(
-                listaAnuncios = emptyList(),
-                favoritosIds = lerAnuncioViewModel.favoritosIds.value ?: emptySet(),
+                listaAnuncios = emptyList(), // Lista inicial vazia
+                favoritosIds = lerAnuncioViewModel.favoritosIds.value ?: emptySet(), // Cache de favoritos
                 onAnuncioClick = { anuncio ->
-                    // ===== NAVEGAR PARA DETALHES =====
+                    // Navegação para tela de detalhes do anúncio
                     val action = ColecaoFragmentDirections.actionColecaoToDetalhesAnuncio(anuncio)
                     findNavController().navigate(action)
                 },
                 onFavoritoClick = { anuncio ->
-                    // Delegar toggle para o ViewModel
+                    // Remove/adiciona favorito via ViewModel compartilhado
                     lerAnuncioViewModel.onFavoritoClick(anuncio.id)
                 },
             )
 
+        // Layout vertical para melhor visualização dos favoritos
         binding.rvColecao.layoutManager = LinearLayoutManager(requireContext())
         binding.rvColecao.adapter = adapter
     }
 
+    // Observa mudanças nos dados e aplica filtro de favoritos
     private fun setupObservers() {
-        // Observa anúncios e favoritos e mostra apenas os favoritos
+        // Observer 1: Quando lista completa de anúncios muda
         lerAnuncioViewModel.anuncios.observe(viewLifecycleOwner) { lista ->
-            val favoritos = lerAnuncioViewModel.favoritosIds.value ?: emptySet()
-            val listaFiltrada = lista.filter { it.id in favoritos }
-            adapter.atualizarLista(listaFiltrada, favoritos)
+            val favoritos = lerAnuncioViewModel.favoritosIds.value ?: emptySet() // IDs favoritados
+            val listaFiltrada = lista.filter { it.id in favoritos } // Filtra apenas favoritos
+            adapter.atualizarLista(listaFiltrada, favoritos) // Atualiza UI
         }
 
+        // Observer 2: Quando lista de favoritos muda (adicionar/remover)
         lerAnuncioViewModel.favoritosIds.observe(viewLifecycleOwner) { favoritos ->
-            val lista = lerAnuncioViewModel.anuncios.value ?: emptyList()
-            val listaFiltrada = lista.filter { it.id in favoritos }
-            adapter.atualizarLista(listaFiltrada, favoritos)
+            val lista = lerAnuncioViewModel.anuncios.value ?: emptyList() // Lista completa
+            val listaFiltrada = lista.filter { it.id in favoritos } // Reaplica filtro
+            adapter.atualizarLista(listaFiltrada, favoritos) // Atualiza UI com novos favoritos
         }
     }
 

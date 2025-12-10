@@ -21,19 +21,24 @@ import android.util.Base64
 import androidx.exifinterface.media.ExifInterface
 import java.io.InputStream
 
+/**
+ * Fragment para edição do perfil do usuário
+ * Permite alterar dados pessoais e foto de perfil
+ */
 class EditarPerfilFragment : Fragment() {
 
-    private var _binding: FragmentEditarPerfilBinding? = null
-    private val binding get() = _binding!!
-    private val viewModel: PerfilViewModel by viewModels()
-    private val args: EditarPerfilFragmentArgs by navArgs()
+    private var _binding: FragmentEditarPerfilBinding? = null // Binding nullável
+    private val binding get() = _binding!! // Acesso seguro
+    private val viewModel: PerfilViewModel by viewModels() // ViewModel para persistência
+    private val args: EditarPerfilFragmentArgs by navArgs() // Dados atuais do usuário
 
-    private var novaFotoUri: Uri? = null
+    private var novaFotoUri: Uri? = null // Nova foto selecionada (se houver)
 
+    // Launcher para seleção de nova foto de perfil
     private val selecionarFoto = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if (uri != null) {
-            novaFotoUri = uri
-            binding.ivFotoEdit.setImageURI(uri)
+            novaFotoUri = uri // Armazena URI da nova foto
+            binding.ivFotoEdit.setImageURI(uri) // Mostra preview imediato
         }
     }
 

@@ -18,30 +18,38 @@ import br.com.entrevizinhos.databinding.FragmentCriarAnuncioBinding
 import br.com.entrevizinhos.viewmodel.CriarAnuncioViewModel
 import com.google.android.material.chip.Chip
 
+/**
+ * Fragment para edição de anúncios existentes
+ * Reutiliza layout do CriarAnuncioFragment com dados pré-preenchidos
+ */
 class EditarAnuncioFragment : Fragment() {
 
-    private var _binding: FragmentCriarAnuncioBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var viewModel: CriarAnuncioViewModel
+    private var _binding: FragmentCriarAnuncioBinding? = null // Reutiliza layout de criação
+    private val binding get() = _binding!! // Acesso seguro ao binding
+    private lateinit var viewModel: CriarAnuncioViewModel // ViewModel compartilhado
 
-    private val args: EditarAnuncioFragmentArgs by navArgs()
+    private val args: EditarAnuncioFragmentArgs by navArgs() // Anúncio a ser editado
 
-    private var entregaSelecionada = ""
-    private val pagamentosSelecionados = mutableSetOf<String>()
+    // Variáveis de estado para seleções do usuário
+    private var entregaSelecionada = "" // Modalidade de entrega selecionada
+    private val pagamentosSelecionados = mutableSetOf<String>() // Formas de pagamento
 
+    // Variáveis para gerenciar novas fotos (se o usuário trocar)
     private var uriFoto1: Uri? = null
     private var uriFoto2: Uri? = null
     private var uriFoto3: Uri? = null
-    private var slotFotoSelecionado = 1
+    private var slotFotoSelecionado = 1 // Controla qual slot está sendo editado
 
+    // Launcher para seleção de novas fotos (substituição das existentes)
     private val selecionarFoto =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
+                // Atualiza slot correspondente com nova foto
                 when (slotFotoSelecionado) {
                     1 -> {
-                        uriFoto1 = uri
-                        binding.ivFoto1.setImageURI(uri)
-                        binding.ivFoto1.setPadding(0, 0, 0, 0)
+                        uriFoto1 = uri // Armazena URI da nova foto
+                        binding.ivFoto1.setImageURI(uri) // Mostra preview
+                        binding.ivFoto1.setPadding(0, 0, 0, 0) // Remove padding padrão
                     }
                     2 -> {
                         uriFoto2 = uri
@@ -72,24 +80,27 @@ class EditarAnuncioFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Inicializa ViewModel (mesmo usado para criar e editar)
         viewModel = ViewModelProvider(this).get(CriarAnuncioViewModel::class.java)
 
-        val anuncio = args.anuncio
+        val anuncio = args.anuncio // Anúncio recebido para edição
 
-        // Preenchendo os campos com os dados existentes
-        binding.toolbar.title = "Editar Anúncio"
+        // Personalização da tela para modo edição
+        binding.toolbar.title = "Editar Anúncio" // Muda título da toolbar
+        // Preenche campos com dados existentes
         binding.etTituloAnuncio.setText(anuncio.titulo)
         binding.etDescricaoAnuncio.setText(anuncio.descricao)
         binding.etPrecoAnuncio.setText(anuncio.preco.toString())
 
-        setupToolbar()
-        setupSpinner(anuncio.categoria)
-        setupChipsEntrega(anuncio.entrega)
-        setupChipsPagamento(anuncio.formasPagamento)
-        setupFotos(anuncio.fotos) // ===== ADICIONAR FOTOS EXISTENTES =====
-        setupFotoListeners()
-        setupListeners(anuncio)
-        setupObservers()
+        // Configuração da tela com dados existentes
+        setupToolbar() // Botão voltar
+        setupSpinner(anuncio.categoria) // Categoria pré-selecionada
+        setupChipsEntrega(anuncio.entrega) // Entrega pré-selecionada
+        setupChipsPagamento(anuncio.formasPagamento) // Pagamentos pré-selecionados
+        setupFotos(anuncio.fotos) // Carrega fotos existentes
+        setupFotoListeners() // Listeners para trocar fotos
+        setupListeners(anuncio) // Botão atualizar
+        setupObservers() // Observa resultado da operação
     }
 
     private fun setupToolbar() {

@@ -16,17 +16,18 @@ import br.com.entrevizinhos.ui.adapter.AnuncioAdapter
 import br.com.entrevizinhos.viewmodel.LerAnuncioViewModel
 import com.google.android.material.chip.Chip
 
+/**
+ * Fragment principal que exibe o feed de anúncios com filtros por categoria
+ */
 class FeedFragment : Fragment() {
     private var bindingNullable: FragmentFeedBinding? = null
-
     private val binding get() = bindingNullable!!
 
-    // usa ViewModel compartilhado entre fragments
+    // ViewModel compartilhado entre fragments
     private val lerAnuncioViewModel: LerAnuncioViewModel by activityViewModels()
+    private lateinit var adapter: AnuncioAdapter
 
-    private lateinit var adapter: AnuncioAdapter // lateintit permite ser vazio
-
-    // Guarda a lista e a categoria atuais para reaplicar filtros quando favoritos mudarem
+    // Variáveis para controle de filtros
     private var listaAtual: List<Anuncio> = emptyList()
     private var categoriaAtual: String = ""
 
@@ -49,49 +50,54 @@ class FeedFragment : Fragment() {
         setupObservers()
         capturaCategoria()
 
-        // define categoria inicial
+        // Define categoria inicial como "Todos"
         categoriaAtual = getString(R.string.categoria_todos)
     }
 
+    // Configura toolbar de navegação
     private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
     }
 
+    // Configura RecyclerView com adapter
     private fun setupRecyclerView() {
         adapter =
             AnuncioAdapter(
                 listaAnuncios = emptyList(),
                 favoritosIds = lerAnuncioViewModel.favoritosIds.value ?: emptySet(),
                 onAnuncioClick = { anuncio ->
+                    // Navega para detalhes do anúncio
                     val action =
                         FeedFragmentDirections.actionFeedFragmentToDetalhesAnuncioFragment(anuncio)
                     findNavController().navigate(action)
                 },
                 onFavoritoClick = { anuncio ->
-                    // delega pro ViewModel alterar favorito do usuário logado
+                    // Alterna favorito via ViewModel
                     lerAnuncioViewModel.onFavoritoClick(anuncio.id)
                 },
             )
 
+        // Layout em grade com 2 colunas
         binding.rvAnuncios.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvAnuncios.adapter = adapter
     }
 
+    // Configura observadores do ViewModel
     private fun setupObservers() {
-        // Mostra a barra de progresso assim que começamos a observar
+        // Mostra loading inicial
         binding.pbLoading.visibility = View.VISIBLE
 
+        // Observa lista de anúncios
         lerAnuncioViewModel.anuncios.observe(viewLifecycleOwner) { listaAnuncios ->
-            // Esconde a barra de progresso
             binding.pbLoading.visibility = View.GONE
 
-            // guarda lista atual e reaplica filtro
+            // Guarda lista e aplica filtros
             listaAtual = listaAnuncios
             aplicarFiltros(listaAnuncios, categoriaAtual.ifEmpty { getString(R.string.categoria_todos) })
 
-            //  se a lista estiver vazia
+            // Mostra mensagem se lista vazia
             if (listaAnuncios.isEmpty()) {
                 Toast.makeText(requireContext(), "Nenhum anúncio encontrado.", Toast.LENGTH_SHORT).show()
             }
@@ -103,11 +109,14 @@ class FeedFragment : Fragment() {
         }
     }
 
+    // Aplica filtro de categoria na lista
     private fun aplicarFiltros(
         listaCompleta: List<Anuncio>,
         categoria: String,
     ) {
         val labelTodos = getString(R.string.categoria_todos)
+        
+        // Filtra por categoria ou mostra todos
         val listaFiltrada =
             if (categoria.equals(labelTodos, ignoreCase = true)) {
                 listaCompleta
@@ -117,26 +126,25 @@ class FeedFragment : Fragment() {
                 }
             }
 
+        // Atualiza adapter com lista filtrada
         adapter.atualizarLista(listaFiltrada, lerAnuncioViewModel.favoritosIds.value ?: emptySet())
     }
 
+    // Configura listener para seleção de categoria
     private fun capturaCategoria() {
         binding.chipGroupCategorias.setOnCheckedStateChangeListener { group, checkedIds ->
-            val checkedId = checkedIds.firstOrNull() ?: return@setOnCheckedStateChangeListener // se vier vazio cancela operação
+            // Cancela se nenhum chip selecionado
+            val checkedId = checkedIds.firstOrNull() ?: return@setOnCheckedStateChangeListener
 
-            // Acha o Chip dentro do ChipGroup a partir do id selecionado
+            // Encontra chip selecionado
             val chipSelecionado = group.findViewById<Chip>(checkedId)
-
-            // Pega o texto exibido no chip (ex: "Móveis", "Eletrônicos"...)
             val categoriaSelecionada = chipSelecionado.text.toString()
 
-            // atualiza a categoria atual
+            // Atualiza categoria atual
             categoriaAtual = categoriaSelecionada
 
-            // Pega a lista mais recente que o ViewModel tem em memória
+            // Aplica filtro na lista atual
             val listaAtualLocal = lerAnuncioViewModel.anuncios.value ?: emptyList()
-
-            // Aplica o filtro com base nessa categoria
             aplicarFiltros(listaAtualLocal, categoriaSelecionada)
         }
     }

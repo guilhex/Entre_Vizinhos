@@ -11,31 +11,35 @@ import br.com.entrevizinhos.model.Anuncio
 import br.com.entrevizinhos.model.Usuario
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel responsável por gerenciar perfil do usuário e seus anúncios
+ */
 class PerfilViewModel : ViewModel() {
-    private val repository = AuthRepository()
-    private val anuncioRepository = AnuncioRepository()
-    private val usuarioRepository = UsuarioRepository()
+    private val repository = AuthRepository() // Repository de autenticação
+    private val anuncioRepository = AnuncioRepository() // Repository de anúncios
+    private val usuarioRepository = UsuarioRepository() // Repository de usuários
 
+    // Dados de um vendedor específico (para tela de detalhes)
     private val _vendedor = MutableLiveData<Usuario?>()
     val vendedor: LiveData<Usuario?> = _vendedor
 
-    // --- DADOS DO USUÁRIO ---
-    // Pequena correção de tipo aqui para evitar warnings de cast
+    // Dados do usuário logado
     private val _dadosUsuario = MutableLiveData<Usuario?>()
     val dadosUsuario: LiveData<Usuario?> = _dadosUsuario
 
-    // --- ESTADO DO LOGOUT ---
+    // Estado do logout
     private val _estadoLogout = MutableLiveData<Boolean>()
     val estadoLogout: LiveData<Boolean> = _estadoLogout
 
-    // --- ESTADO DE CARREGAMENTO ---
+    // Estado de carregamento
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // --- ANUNCIOS ---
+    // Anúncios do usuário logado
     private val _meusAnuncios = MutableLiveData<List<Anuncio>>()
     val meusAnuncios: LiveData<List<Anuncio>> = _meusAnuncios
 
+    // Carrega dados do usuário logado
     fun carregarDados() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -47,6 +51,7 @@ class PerfilViewModel : ViewModel() {
         }
     }
 
+    // Salva alterações no perfil
     fun salvarPerfil(usuario: Usuario) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -58,11 +63,13 @@ class PerfilViewModel : ViewModel() {
         }
     }
 
+    // Faz logout do usuário
     fun deslogar() {
         repository.signOut()
         _estadoLogout.value = true
     }
 
+    // Carrega anúncios do usuário logado
     fun carregarMeusAnuncios() {
         val usuarioAtual = repository.getCurrentUser()
         if (usuarioAtual == null) {
@@ -78,6 +85,7 @@ class PerfilViewModel : ViewModel() {
         }
     }
 
+    // Carrega dados de um vendedor específico
     fun carregarVendedor(id: String) {
         viewModelScope.launch {
             val usuario = usuarioRepository.getUsuario(id)
@@ -85,10 +93,11 @@ class PerfilViewModel : ViewModel() {
         }
     }
 
+    // Deleta anúncio e atualiza lista local
     suspend fun deletarAnuncio(anuncioId: String): Boolean {
         val sucesso = anuncioRepository.deletarAnuncio(anuncioId)
 
-        // Se deu certo, atualizamos a lista local imediatamente para a UI reagir
+        // Atualiza lista local se sucesso
         if (sucesso) {
             val listaAtual = _meusAnuncios.value.orEmpty().toMutableList()
             listaAtual.removeAll { it.id == anuncioId }

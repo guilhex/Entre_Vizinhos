@@ -19,11 +19,14 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment responsável pela tela de login com Google e acesso como visitante
+ */
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    private val authRepository = AuthRepository()
+    private val authRepository = AuthRepository() // Repository de autenticação
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,11 +43,13 @@ class LoginFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Redireciona se já estiver logado
         if (authRepository.getCurrentUser() != null) {
             findNavController().navigate(R.id.action_login_to_feed)
             return
         }
 
+        // Configura Google Sign-In
         val gso =
             GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -54,6 +59,7 @@ class LoginFragment : Fragment() {
 
         val googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
+        // Launcher para resultado do Google Sign-In
         val launcherGoogle =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
@@ -62,10 +68,8 @@ class LoginFragment : Fragment() {
                         val conta = task.getResult(ApiException::class.java)
                         val credencial = GoogleAuthProvider.getCredential(conta.idToken, null)
 
-                        // [CORREÇÃO] Abre um escopo de corrotina ligado à vida do Fragment
+                        // Executa login em corrotina
                         lifecycleScope.launch {
-                            // Agora podemos chamar a função suspend!
-                            // Note que não usamos mais { callback }, e sim pegamos o resultado direto
                             val sucesso = authRepository.loginComGoogle(credencial)
 
                             if (sucesso) {
@@ -81,6 +85,7 @@ class LoginFragment : Fragment() {
                 }
             }
 
+        // Configura listeners dos botões
         binding.btnGoogleLogin.setOnClickListener {
             launcherGoogle.launch(googleSignInClient.signInIntent)
         }
