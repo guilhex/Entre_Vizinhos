@@ -39,21 +39,6 @@ O projeto foi construído utilizando as melhores práticas de desenvolvimento An
 - **Carregamento de Imagens:** [Glide](https://github.com/bumptech/glide) & Decodificação Base64 Nativa
 - **Assincronismo:** Coroutines
 
----
-
-## 📸 Telas do Projeto
-
-| Login | Feed Principal | Detalhes do Anúncio |
-|:---:|:---:|:---:|
-| <img src="screenshots/login.png" width="200"> | <img src="screenshots/feed.png" width="200"> | <img src="screenshots/detalhes.png" width="200"> |
-
-| Perfil | Criar Anúncio | Meus Favoritos |
-|:---:|:---:|:---:|
-| <img src="screenshots/perfil.png" width="200"> | <img src="screenshots/criar_anuncio.png" width="200"> | <img src="screenshots/favoritos.png" width="200"> |
-
-> *Nota: As imagens acima são ilustrativas. Para ver o app em funcionamento, clone o repositório.*
-
----
 
 ## 🚀 Como Executar o Projeto
 
@@ -90,7 +75,9 @@ Conecte um dispositivo físico ou emulador.
 
 Clique no botão Run (▶️).
 
-⚠️ Observações Técnicas
+
+## ⚠️ Observações Técnicas
+
 Armazenamento de Imagens
 Devido a restrições de custos em planos de servidor para fins acadêmicos, este projeto utiliza uma abordagem alternativa para armazenamento de imagens:
 
@@ -106,7 +93,7 @@ Trabalhos Futuros
 [ ] Moderação automática de conteúdo.
 
 👨‍💻 Autores
-<table> <tr> <td align="center"> <a href="https://www.google.com/search?q=https://github.com/SEU_USUARIO_AQUI"> <img src="https://www.google.com/search?q=https://avatars.githubusercontent.com/u/SEU_ID_AQUI%3Fv%3D4" width="100px;" alt="Foto do Artur"/>
+<table> <tr> <td align="center"> <a href="https://www.google.com/search?q=https://github.com/GUILHEX"> <img src="https://www.google.com/search?q=https://avatars.githubusercontent.com/u/SEU_ID_AQUI%3Fv%3D4" width="100px;" alt="Foto do Artur"/>
 
 
 <sub><b>Artur Duarte Monteiro</b></sub> </a> </td> <td align="center"> <a href="https://www.google.com/search?q=https://github.com/guilhex"> <img src="https://www.google.com/search?q=https://avatars.githubusercontent.com/guilhex" width="100px;" alt="Foto do Guilherme"/>
