@@ -50,6 +50,7 @@ O projeto foi construído utilizando as melhores práticas de desenvolvimento An
 ### Passo a Passo
 
 1. **Clone o repositório:**
+
    ```bash
    git clone [https://github.com/guilhex/Entre_Vizinhos.git](https://github.com/guilhex/Entre_Vizinhos.git)
 
@@ -79,13 +80,15 @@ Clique no botão Run (▶️).
 ## ⚠️ Observações Técnicas
 
 Armazenamento de Imagens
+
 Devido a restrições de custos em planos de servidor para fins acadêmicos, este projeto utiliza uma abordagem alternativa para armazenamento de imagens:
 
 As imagens são convertidas para Base64 e salvas diretamente como Strings dentro dos documentos do Firestore.
 
 O app possui um decodificador próprio (BitmapFactory) para transformar essas Strings de volta em Bitmaps e corrigir a rotação (EXIF) de fotos tiradas pela câmera.
 
-Trabalhos Futuros
+## Trabalhos Futuros
+
 [ ] Migração para Firebase Storage.
 
 [ ] Implementação de Chat interno ou link direto para WhatsApp.
