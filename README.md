@@ -4,7 +4,7 @@
 
 ![Badge Android](https://img.shields.io/badge/Android-Kotlin-3DDC84?style=flat&logo=android&logoColor=white)
 ![Badge Firebase](https://img.shields.io/badge/Backend-Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)
-![Badge Status](https://img.shields.io/badge/Status-Em Desenvolvimento)
+![Badge Status](https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow)
 
 ## 📄 Sobre o Projeto
 
