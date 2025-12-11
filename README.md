@@ -563,34 +563,6 @@ Este projeto é um trabalho acadêmico desenvolvido para fins educacionais. Todo
 
 ---
 
-## 📞 Contato
-
-- **Email:** entrevizinhos.dev@gmail.com
-- **Instagram:** [@entrevizinhos_app](https://instagram.com/entrevizinhos_app)
-- **LinkedIn:** [Entre Vizinhos](https://linkedin.com/company/entrevizinhos)
-
----
-
-## 🙏 Agradecimentos
-
-- **Prof. [Nome do Professor]** - Orientação e suporte técnico
-- **Instituto Federal de Goiás (IFG)** - Infraestrutura e recursos
-- **Comunidade de Urutaí-GO** - Feedback e testes beta
-- **Firebase Team** - Plataforma robusta e documentação excelente
-- **Android Developers** - Recursos educacionais e bibliotecas
-
----
-
-## 📚 Referências
-
-- [Documentação Oficial do Android](https://developer.android.com/)
-- [Firebase Documentation](https://firebase.google.com/docs)
-- [Kotlin Language Guide](https://kotlinlang.org/docs/home.html)
-- [Material Design Guidelines](https://m3.material.io/)
-- [MVVM Architecture Guide](https://developer.android.com/topic/architecture)
-
----
-
 <div align="center">
   <img src="app/src/main/res/drawable/logo_entre_vizinhos.png" alt="Logo Entre Vizinhos" width="200"/>
   
